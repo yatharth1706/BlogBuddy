@@ -5,11 +5,11 @@ import UserSuggestions from "@/components/UserSuggestions";
 
 export default function Home() {
   return (
-    <main className="flex h-auto bg-gray-100 flex-col p-2 justify-between">
+    <main className="flex h-auto flex-col py-2 justify-between">
       <NavigationBar />
-      <div className="flex mx-auto bg-white w-11/12">
+      <div className="flex mx-auto px-12">
         <Articles />
-        <div className="flex flex-col">
+        <div className="w-4/12 flex flex-col gap-8 p-8">
           <UserSuggestions />
           <MyReadingList />
         </div>
