@@ -1,5 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { hashPassword } from "@/lib/auth";
 import { MongoClient } from "mongodb";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,9 +15,7 @@ export default async function handler(
 
   // Validate the input data
   if (!name || !email || !password) {
-    res
-      .status(422)
-      .json({ message: "Invalid input. Name / email / password is required" });
+    res.status(422).json({ message: "Invalid input" });
     return;
   }
 

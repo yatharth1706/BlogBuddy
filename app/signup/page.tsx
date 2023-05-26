@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type SignupFormValues = {
   name: String;
@@ -11,14 +12,43 @@ type SignupFormValues = {
 };
 
 function Signup() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const formInitialValues: SignupFormValues = {
     name: "",
     email: "",
     password: "",
   };
 
-  const formSubmit = (values: SignupFormValues) => {
-    alert(JSON.stringify(values, null, 2));
+  const formSubmit = async (values: SignupFormValues) => {
+    try {
+      const { name, email, password } = values;
+      setIsLoading(true);
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const finalResponse = await response.json();
+
+      if (response.ok) {
+        router.push("/login");
+      } else {
+        throw new Error(finalResponse?.message ?? "network error");
+      }
+    } catch (err) {
+      alert(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,21 +86,19 @@ function Signup() {
               className="border-zinc-300 border px-4 py-2 outline-sky-300 rounded-md"
               {...formik.getFieldProps("password")}
             />
-            <button type="submit" className="btn-primary mt-4">
+            <button
+              type="submit"
+              className="btn-primary mt-4"
+              disabled={
+                !formik.values.name ||
+                !formik.values.email ||
+                !formik.values.password ||
+                isLoading
+              }
+            >
               Sign up
             </button>
-            <p className="font-light text-center">Or</p>
-            <button
-              type="button"
-              className="flex items-center gap-2 justify-center btn-secondary"
-            >
-              <img
-                className="w-4"
-                src="/assets/GoogleLogo.png"
-                alt="google logo"
-              />
-              Sign up with Google
-            </button>
+
             <p className="text-center font-light text-gray-700 mt-1">
               Already have an account?{" "}
               <Link href="/login">

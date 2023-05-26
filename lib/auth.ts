@@ -16,7 +16,7 @@ const comparePasswords = (password: string, hashedPassword: string) => {
 // Function to generate a JSON Web Token (JWT)
 const generateJWT = (userId: ObjectId) => {
   const secretKey = "your-secret-key"; // Replace with your own secret key
-  const expiresIn = "1h"; // Token expiration time
+  const expiresIn = "1d"; // Token expiration time
 
   const token = jwt.sign({ userId }, secretKey, { expiresIn });
   return token;

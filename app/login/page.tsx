@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type LoginFormValues = {
   email: String;
@@ -10,13 +11,43 @@ type LoginFormValues = {
 };
 
 function Login() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const formInitialValues: LoginFormValues = {
     email: "",
     password: "",
   };
 
   const formSubmit = async (values: LoginFormValues) => {
-    alert(JSON.stringify(values, null, 2));
+    try {
+      setIsLoading(true);
+      const { email, password } = values;
+
+      const response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const finalResponse = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("jwt", finalResponse.token);
+        router.push("/");
+      } else {
+        throw new Error(finalResponse?.message ?? "network error");
+      }
+    } catch (err) {
+      alert(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -47,20 +78,14 @@ function Login() {
               className="border-zinc-300 border px-4 py-2 outline-sky-300 rounded-md"
               {...formik.getFieldProps("password")}
             />
-            <button type="submit" className="btn-primary mt-4">
-              Login
-            </button>
-            <p className="font-light text-center">Or</p>
             <button
-              type="button"
-              className="flex items-center gap-2 justify-center btn-secondary"
+              type="submit"
+              className="btn-primary mt-4"
+              disabled={
+                isLoading || !formik.values.email || !formik.values.password
+              }
             >
-              <img
-                className="w-4"
-                src="/assets/GoogleLogo.png"
-                alt="google logo"
-              />{" "}
-              Log in with Google
+              Login
             </button>
             <p className="text-center font-light text-gray-700 mt-1">
               Don't have an account.{" "}
