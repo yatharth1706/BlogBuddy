@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 
 type LoginFormValues = {
   email: String;
@@ -30,9 +31,12 @@ function Login() {
 
   const formSubmit = async (values: LoginFormValues) => {
     try {
-      setIsLoading(true);
       const { email, password } = values;
+      if (!email || !password) {
+        return toast("All fields are required");
+      }
 
+      setIsLoading(true);
       const response = await fetch("/api/login", {
         method: "POST",
         body: JSON.stringify({
@@ -49,13 +53,13 @@ function Login() {
       if (response.ok) {
         localStorage.setItem("jwt", finalResponse.token);
         localStorage.setItem("userId", finalResponse.id);
-
+        toast("Logged in successfully");
         router.push("/");
       } else {
         throw new Error(finalResponse?.message ?? "network error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     } finally {
       setIsLoading(false);
     }
@@ -106,9 +110,7 @@ function Login() {
             <button
               type="submit"
               className="btn-primary mt-4"
-              disabled={
-                isLoading || !formik.values.email || !formik.values.password
-              }
+              disabled={isLoading}
             >
               Login
             </button>

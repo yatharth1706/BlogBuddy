@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "react-toastify";
 
 export default function NavigationBar() {
   const [open, setOpen] = useState(false);
@@ -48,7 +49,7 @@ export default function NavigationBar() {
         throw new Error(finalResponse?.message ?? "Network error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 
@@ -65,6 +66,9 @@ export default function NavigationBar() {
     try {
       // validations for the blog
       const { blogBanner, blogTitle, blogDescription, blogTags } = blogData;
+      if (!blogBanner || !blogTitle || blogDescription || !blogTags) {
+        return toast("All fields are required");
+      }
       const response = await fetch("/api/blog", {
         method: "POST",
         body: JSON.stringify({
@@ -83,13 +87,13 @@ export default function NavigationBar() {
       const finalResponse = await response.json();
 
       if (response.ok) {
-        alert("Blog published successfully");
+        toast("Blog published successfully");
         router.push("/");
       } else {
         throw new Error(finalResponse?.message ?? "Network error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 

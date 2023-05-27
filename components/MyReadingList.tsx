@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Data from "./../dummyData.json";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 type ReadingCardDetails = {
   _id: String;
@@ -83,7 +84,7 @@ export default function MyReadingList() {
         throw new Error(finalResponse?.message ?? "Network Error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 

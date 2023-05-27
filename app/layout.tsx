@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { RecoilRoot } from "recoil";
 import RecoilProvider from "@/providers/RecoilProvider";
+import ToastContainerUI from "@/components/ToastContainerUI";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
           <NavigationBar />
           {children}
         </RecoilProvider>
+        <ToastContainerUI />
       </body>
     </html>
   );

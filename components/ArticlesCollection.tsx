@@ -7,6 +7,7 @@ import { BookmarkIcon } from "lucide-react";
 import { userInfo } from "os";
 import { useRecoilState } from "recoil";
 import { blogsList } from "@/atoms/allBlogs";
+import { toast } from "react-toastify";
 
 type ArticleCardDetails = {
   id: String;
@@ -152,13 +153,11 @@ export default function ArticlesCollection({
 
       const finalResponse = await response.json();
 
-      if (response.ok) {
-        alert("Added to reading list");
-      } else {
+      if (!response.ok) {
         throw new Error(finalResponse?.message ?? "Network Error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 
@@ -177,7 +176,7 @@ export default function ArticlesCollection({
         console.log(finalResponse?.user);
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 
@@ -209,7 +208,7 @@ export default function ArticlesCollection({
         }
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     } finally {
       setIsFetchingBlogs(false);
     }

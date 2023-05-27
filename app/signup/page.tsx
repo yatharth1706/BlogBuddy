@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 
 type SignupFormValues = {
   name: String;
@@ -56,12 +57,13 @@ function Signup() {
         const userId = finalResponse?.id;
         localStorage.setItem("jwt", finalResponse.token);
         localStorage.setItem("userId", finalResponse.id);
+        toast("User created successfully");
         router.push("/profile/" + userId);
       } else {
         throw new Error(finalResponse?.message ?? "network error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     } finally {
       setIsLoading(false);
     }

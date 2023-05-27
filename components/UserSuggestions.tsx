@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import InterestedUsersSkeleton from "./InterestedUsersSkeleton";
+import { toast } from "react-toastify";
 
 type UserSuggestionDetails = {
   bio?: String;
@@ -52,7 +53,7 @@ export default function UserSuggestions() {
         throw new Error(finalResponse?.message ?? "Network error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 

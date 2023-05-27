@@ -3,6 +3,7 @@ import { Formik, FormikValues } from "formik";
 import { useParams, useRouter } from "next/navigation";
 import { type } from "os";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 type ProfilePageForm = {
   name: String;
@@ -48,7 +49,7 @@ export default function page() {
         throw new Error(finalResponse?.message ?? "Network error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 
@@ -62,7 +63,9 @@ export default function page() {
   const formSubmit = async (values: FormikValues) => {
     try {
       const { name, email, bio, pic } = values;
-
+      if (!pic) {
+        return toast("Profile pic is mandatory");
+      }
       const userId = params?.id;
       const response = await fetch("/api/user/profile?id=" + userId, {
         method: "PUT",
@@ -80,12 +83,13 @@ export default function page() {
       const finalResponse = await response.json();
       if (response.ok) {
         console.log(finalResponse);
+        toast("User profile updated successfully");
         router.push("/");
       } else {
         throw new Error(finalResponse?.message ?? "Network error");
       }
     } catch (err) {
-      alert(err);
+      toast(String(err));
     }
   };
 
@@ -134,11 +138,7 @@ export default function page() {
               className="border-zinc-300 border px-4 py-2 outline-sky-300 rounded-md"
               {...formik.getFieldProps("bio")}
             />
-            <button
-              type="submit"
-              className="btn-primary mt-4"
-              disabled={!formik.values.bio}
-            >
+            <button type="submit" className="btn-primary mt-4">
               Save
             </button>
           </form>
