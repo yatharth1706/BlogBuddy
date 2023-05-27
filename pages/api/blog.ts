@@ -13,27 +13,39 @@ export default async function handler(
 
     // create a blog collection
     if (req.method === "GET") {
-      const { id, action } = req.query;
+      const { id, action, userId, blogId } = req.query;
 
-      if (action === "MyBlogs") {
-        const user = await db
-          .collection("users")
-          .findOne({ _id: new ObjectId(id as string) });
-        const blogs = await db
+      let blogsWithUserDetails = {};
+      if (blogId) {
+        blogsWithUserDetails = await db
           .collection("blogs")
-          .find({ createdBy: new ObjectId(id as string) })
+          .aggregate([
+            {
+              $match: {
+                _id: new ObjectId(blogId as string),
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "createdBy",
+                foreignField: "_id",
+                as: "user",
+              },
+            },
+            {
+              $unwind: "$user",
+            },
+          ])
           .toArray();
-        res.status(200).send({ blogs, user });
       } else {
-        const { blogId } = req.query;
-        let blogsWithUserDetails = {};
-        if (blogId) {
+        if (action === "MyBlogs") {
           blogsWithUserDetails = await db
             .collection("blogs")
             .aggregate([
               {
                 $match: {
-                  _id: new ObjectId(blogId as string),
+                  createdBy: new ObjectId(userId as string),
                 },
               },
               {
@@ -67,18 +79,25 @@ export default async function handler(
             ])
             .toArray();
         }
-        res.status(200).send({ blogs: blogsWithUserDetails });
       }
+      res.status(200).send({ blogs: blogsWithUserDetails });
     } else if (req.method === "POST" || req.method === "PUT") {
-      const { blogBanner, blogTitle, blogDescription, createdBy, createdOn } =
-        req.body;
+      const {
+        blogBanner,
+        blogTitle,
+        blogDescription,
+        blogTags,
+        createdBy,
+        createdOn,
+      } = req.body;
 
       if (req.method === "POST") {
         const result = await db.collection("blogs").insertOne({
           blogBanner,
           blogTitle,
           blogDescription,
-          createdBy,
+          tags: blogTags,
+          createdBy: new ObjectId(createdBy),
           createdOn,
         });
 

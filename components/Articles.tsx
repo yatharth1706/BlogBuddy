@@ -47,7 +47,7 @@ export default function Articles() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <ArticlesCollection selectedType="All" />
+      <ArticlesCollection selectedType={settings.blogType} />
     </div>
   );
 }

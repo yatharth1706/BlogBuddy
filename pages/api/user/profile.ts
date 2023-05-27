@@ -26,11 +26,16 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse, db: Db) {
-  const userId = new ObjectId(req.query.id as string);
+  if (req.query.id) {
+    const userId = new ObjectId(req.query.id as string);
+    const result = await db.collection("users").findOne({ _id: userId });
 
-  const result = await db.collection("users").findOne({ _id: userId });
+    res.status(200).send({ user: result });
+  } else {
+    const result = await db.collection("users").find().toArray();
 
-  res.status(200).send({ user: result });
+    res.status(200).send({ users: result });
+  }
 }
 
 async function PUT(req: NextApiRequest, res: NextApiResponse, db: Db) {

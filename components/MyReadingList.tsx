@@ -38,10 +38,12 @@ function ReadingCard(props: ReadingCardDetails) {
 
 export default function MyReadingList() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <h1 className="font-medium text-lg">My Reading List</h1>
-      "No Data Yet"
-      {/* {Data.readingList.map((reading) => (
+      {MyReadingList.length === 0 && (
+        <span className="text-sm text-gray-600">No Data Yet</span>
+      )}
+      {/* {readingList.map((reading) => (
         <ReadingCard
           authorName={reading.authorName}
           authorPic={reading.authorImage}

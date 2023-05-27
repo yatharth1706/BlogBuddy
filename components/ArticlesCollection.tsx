@@ -107,8 +107,11 @@ export default function ArticlesCollection({
   const fetchBlogs = async () => {
     try {
       setIsFetchingBlogs(true);
+      setBlogs([]);
       if (selectedType === "My Blogs") {
-        const response = await fetch("/api/blog" + "?action=MyBlogs&id=" + id);
+        const response = await fetch(
+          "/api/blog" + "?action=MyBlogs&userId=" + id
+        );
         const finalResponse = await response.json();
 
         if (response.ok) {
@@ -142,7 +145,7 @@ export default function ArticlesCollection({
         <ArticleCard
           id={blogData?._id as string}
           key={blogData?._id as string}
-          authorName={blogData.user.name}
+          authorName={blogData.user?.name}
           authorBio={blogData.user.bio}
           authorImage={blogData.user.pic}
           blogTitle={blogData.blogTitle}

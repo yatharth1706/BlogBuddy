@@ -64,15 +64,16 @@ export default function NavigationBar() {
   const handlePublish = async () => {
     try {
       // validations for the blog
-      const { blogBanner, blogTitle, blogDescription } = blogData;
+      const { blogBanner, blogTitle, blogDescription, blogTags } = blogData;
       const response = await fetch("/api/blog", {
         method: "POST",
         body: JSON.stringify({
           blogBanner,
           blogTitle,
           blogDescription,
-          CreatedBy: "GetLoggedInUser",
-          CreatedOn: "May 27, 10:26",
+          blogTags,
+          createdBy: localStorage.getItem("userId"),
+          createdOn: new Date().toDateString(),
         }),
         headers: {
           "content-type": "application/json",
