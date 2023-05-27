@@ -109,10 +109,12 @@ function Login() {
             )}
             <button
               type="submit"
-              className="btn-primary mt-4"
+              className={
+                "btn-primary mt-4 " + (isLoading ? "bg-opacity-70" : "")
+              }
               disabled={isLoading}
             >
-              Login
+              {isLoading ? "Logging in ..." : "Log in"}
             </button>
             <p className="text-center font-light text-gray-700 mt-1">
               Don't have an account.{" "}

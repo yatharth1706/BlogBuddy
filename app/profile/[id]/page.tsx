@@ -23,6 +23,8 @@ type UserInfo = {
 export default function page() {
   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "", email: "" });
   const [filePreview, setFilePreview] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const params = useParams();
   const router = useRouter();
 
@@ -82,7 +84,7 @@ export default function page() {
       if (!bio) {
         return toast("Bio is mandatory");
       }
-
+      setIsLoading(true);
       const fileResponse = await storeFile();
 
       const userId = params?.id;
@@ -109,6 +111,8 @@ export default function page() {
       }
     } catch (err) {
       toast(String(err));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -159,8 +163,13 @@ export default function page() {
               className="border-zinc-300 border px-4 py-2 outline-sky-300 rounded-md"
               {...formik.getFieldProps("bio")}
             />
-            <button type="submit" className="btn-primary mt-4">
-              Save
+            <button
+              type="submit"
+              className={
+                "btn-primary mt-4 " + (isLoading ? "bg-opacity-70" : "")
+              }
+            >
+              {isLoading ? "Saving" : "Save"}
             </button>
           </form>
         )}

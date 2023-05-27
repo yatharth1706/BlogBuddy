@@ -108,6 +108,8 @@ export default async function handler(
           blogTitle,
           blogDescription,
           tags: blogTags,
+          readingList: [],
+          likeList: [],
           createdBy: new ObjectId(createdBy),
           createdOn,
         });

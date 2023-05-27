@@ -31,6 +31,7 @@ export default function NavigationBar() {
     };
   }>({});
   const [userPic, setUserPic] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -58,7 +59,7 @@ export default function NavigationBar() {
   };
 
   const getRightUserProfilePic = async (pic: string) => {
-    if (!pic.includes("http")) {
+    if (!pic?.includes("http")) {
       const response = await getFilePreview(pic);
       setUserPic(response?.href as string);
     } else {
@@ -78,6 +79,7 @@ export default function NavigationBar() {
   const handlePublish = async () => {
     try {
       // validations for the blog
+      setIsLoading(true);
       const { blogTitle, blogDescription, blogTags } = blogData;
       if (!blogTitle || !blogDescription || !blogTags) {
         return toast("All fields are required");
@@ -109,13 +111,15 @@ export default function NavigationBar() {
       }
     } catch (err) {
       toast(String(err));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleLogout = () => {
     localStorage.clear();
     handleItemActivate();
-    router.refresh();
+    window.location.reload();
   };
 
   return !path?.includes("login") && !path?.includes("signup") ? (
@@ -125,8 +129,11 @@ export default function NavigationBar() {
       </h1>
       <div className="flex items-center gap-4 absolute right-8 top-1/2 transform -translate-y-1/2">
         {path?.includes("/blog/new") ? (
-          <button className="btn-primary" onClick={handlePublish}>
-            Publish
+          <button
+            className={"btn-primary " + (isLoading ? "bg-opacity-70" : "")}
+            onClick={handlePublish}
+          >
+            {isLoading ? "Publishing..." : "Publish"}
           </button>
         ) : (
           <Link href="/blog/new">

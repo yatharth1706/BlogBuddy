@@ -125,10 +125,12 @@ function Signup() {
             )}
             <button
               type="submit"
-              className="btn-primary mt-4"
+              className={
+                "btn-primary mt-4 " + (isLoading ? "bg-opacity-70" : "")
+              }
               disabled={isLoading}
             >
-              Sign up
+              {isLoading ? "Signing up..." : "Sign up"}
             </button>
 
             <p className="text-center font-light text-gray-700 mt-1">

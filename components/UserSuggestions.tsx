@@ -10,6 +10,7 @@ type UserSuggestionDetails = {
   name?: String;
   pic?: String;
   _id?: String;
+  userId?: String;
 };
 
 function UserSuggestionsCard(props: UserSuggestionDetails) {
@@ -20,6 +21,28 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
       getPicURL();
     }
   }, []);
+
+  const handleFollow = async (followId: string) => {
+    try {
+      const response = await fetch("/api/user/follow", {
+        method: "PUT",
+        body: JSON.stringify({
+          userId: props.userId,
+          followUserId: followId,
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+
+      const finalResponse = await response.json();
+      if (!response.ok) {
+        toast(finalResponse?.message ?? "Network error");
+      }
+    } catch (err) {
+      toast(String(err));
+    }
+  };
 
   const getPicURL = async () => {
     const file = await getFilePreview(props.pic as string);
@@ -39,7 +62,12 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
         <p className="font-light text-gray-600 text-xs">{props.bio}</p>
       </div>
       <div className="ml-auto">
-        <button className="btn-secondary">Follow</button>
+        <button
+          className="btn-secondary"
+          onClick={() => handleFollow(props?._id as string)}
+        >
+          Follow
+        </button>
       </div>
     </div>
   );
@@ -79,7 +107,13 @@ export default function UserSuggestions() {
       {userSuggestions.map(
         (sug) =>
           sug._id !== userId && (
-            <UserSuggestionsCard name={sug.name} bio={sug.bio} pic={sug.pic} />
+            <UserSuggestionsCard
+              userId={userId}
+              name={sug.name}
+              bio={sug.bio}
+              pic={sug.pic}
+              _id={sug._id}
+            />
           )
       )}
     </div>
