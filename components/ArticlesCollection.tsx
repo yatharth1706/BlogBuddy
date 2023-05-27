@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import Data from "./../dummyData.json";
 import BlogsSkeleton from "./BlogsSkeleton";
 import Link from "next/link";
+import { BookmarkIcon } from "lucide-react";
+import { userInfo } from "os";
+import { useRecoilState } from "recoil";
+import { blogsList } from "@/atoms/allBlogs";
 
 type ArticleCardDetails = {
   id: String;
@@ -15,6 +19,10 @@ type ArticleCardDetails = {
   blogPic: String;
   createdAt: String;
   tags?: String;
+  user?: {
+    readingList?: String[];
+  };
+  handleBookmark?: (blogId: String) => void;
 };
 
 type BlogData = {
@@ -79,16 +87,37 @@ function ArticleCard(props: ArticleCardDetails) {
           </Link>
         </div>
       </div>
-      <div className="flex gap-4 mb-6">
-        {props?.tags?.split(",").map((tag) => (
-          <div className="w-44 rounded-full p-2 bg-gray-100 flex justify-center items-center">
-            {tag.trim()}
-          </div>
-        ))}
+      <div className="flex justify-between">
+        <div className="flex gap-4 mb-6">
+          {props?.tags?.split(",").map((tag) => (
+            <div className="w-44 rounded-full p-2 bg-gray-100 flex justify-center items-center">
+              {tag.trim()}
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-4 mb-6">
+          <BookmarkIcon
+            className={`hover:fill-gray-500 cursor-pointer text-gray-700 ${
+              props?.user?.readingList?.includes(props.id)
+                ? "fill-gray-800"
+                : ""
+            }`}
+            onClick={() => props?.handleBookmark(props.id)}
+          />
+        </div>
       </div>
     </div>
   );
 }
+
+type User = {
+  readingList?: String[];
+  bio?: String;
+  email?: String;
+  name?: String;
+  pic?: String;
+  _id?: String;
+};
 
 export default function ArticlesCollection({
   selectedType,
@@ -96,13 +125,61 @@ export default function ArticlesCollection({
   selectedType: String;
 }) {
   const [isFetchingBlogs, setIsFetchingBlogs] = useState(true);
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useRecoilState(blogsList);
+  const [userInfo, setUserInfo] = useState<User>({});
   const id = localStorage.getItem("userId");
 
   useEffect(() => {
     fetchBlogs();
+    fetchUser();
     console.log(selectedType);
   }, [selectedType]);
+
+  const handleBookmark = async (blogId: String) => {
+    try {
+      console.log(blogs);
+      const userId = localStorage.getItem("userId") ?? "";
+      const response = await fetch("/api/blog/bookmark", {
+        method: "PUT",
+        body: JSON.stringify({
+          userId,
+          blogId,
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+
+      const finalResponse = await response.json();
+
+      if (response.ok) {
+        alert("Added to reading list");
+      } else {
+        throw new Error(finalResponse?.message ?? "Network Error");
+      }
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch("/api/user/profile?id=" + id ?? "", {
+        method: "GET",
+      });
+
+      const finalResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error(finalResponse?.message ?? "Network error");
+      } else {
+        setUserInfo(finalResponse?.user);
+        console.log(finalResponse?.user);
+      }
+    } catch (err) {
+      alert(err);
+    }
+  };
 
   const fetchBlogs = async () => {
     try {
@@ -141,6 +218,7 @@ export default function ArticlesCollection({
   return (
     <div className="flex flex-col gap-6">
       {isFetchingBlogs && <BlogsSkeleton />}
+      {!isFetchingBlogs && blogs.length === 0 && <span>No blogs yet</span>}
       {blogs.map((blogData: BlogData) => (
         <ArticleCard
           id={blogData?._id as string}
@@ -153,6 +231,8 @@ export default function ArticlesCollection({
           blogPic={blogData.blogBanner}
           createdAt={blogData.createdOn}
           tags={blogData.tags}
+          user={userInfo ?? {}}
+          handleBookmark={handleBookmark}
         />
       ))}
     </div>

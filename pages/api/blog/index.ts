@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { userInfo } from "os";
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,6 +40,16 @@ export default async function handler(
           ])
           .toArray();
       } else {
+        let userInfo = [];
+        console.log(userId);
+        if (userId) {
+          userInfo = await db
+            .collection("users")
+            .find({ _id: new ObjectId(userId as string) })
+            .toArray();
+
+          console.log(userInfo);
+        }
         if (action === "MyBlogs") {
           blogsWithUserDetails = await db
             .collection("blogs")
@@ -80,7 +91,7 @@ export default async function handler(
             .toArray();
         }
       }
-      res.status(200).send({ blogs: blogsWithUserDetails });
+      res.status(200).send({ blogs: blogsWithUserDetails, userInfo });
     } else if (req.method === "POST" || req.method === "PUT") {
       const {
         blogBanner,

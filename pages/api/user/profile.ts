@@ -26,14 +26,16 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse, db: Db) {
-  if (req.query.id) {
+  console.log(req.query);
+  if (req.query.id != null && req.query.id !== "" && req.query.id !== "null") {
+    console.log("1");
     const userId = new ObjectId(req.query.id as string);
     const result = await db.collection("users").findOne({ _id: userId });
 
     res.status(200).send({ user: result });
   } else {
     const result = await db.collection("users").find().toArray();
-
+    console.log("2");
     res.status(200).send({ users: result });
   }
 }
