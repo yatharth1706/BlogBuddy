@@ -16,7 +16,9 @@ export default async function handler(
       const { userId, blogId } = req.body;
 
       if (!userId) {
-        res.status(400).send({ message: "User must be logged in to bookmark" });
+        res
+          .status(400)
+          .send({ message: "User must be logged in to like the blog" });
       }
 
       const user = await db
@@ -27,7 +29,7 @@ export default async function handler(
       const blogObjectId = new ObjectId(blogId);
 
       if (
-        user?.readingList?.some((readingId: ObjectId) =>
+        user?.likeList?.some((readingId: ObjectId) =>
           readingId.equals(blogObjectId)
         )
       ) {
@@ -36,20 +38,29 @@ export default async function handler(
           .collection("users")
           .updateOne(
             { _id: new ObjectId(userId) },
-            { $pull: { readingList: blogObjectId } }
+            { $pull: { likeList: blogObjectId } }
           );
-        console.log("Blog removed from reading list");
+
+        await db
+          .collection("blogs")
+          .updateOne({ _id: blogObjectId }, { $inc: { likeCount: -1 } });
+
+        console.log("Blog removed from like list");
       } else {
         await db
           .collection("users")
           .updateOne(
             { _id: new ObjectId(userId) },
-            { $addToSet: { readingList: blogObjectId } }
+            { $addToSet: { likeList: blogObjectId } }
           );
-        console.log("Blog added to reading list");
+        await db
+          .collection("blogs")
+          .updateOne({ _id: blogObjectId }, { $inc: { likeCount: 1 } });
+
+        console.log("Blog added to like list");
       }
 
-      res.status(200).send({ message: "Bookmarked successfully" });
+      res.status(200).send({ message: "Liked / Unliked successfully" });
     }
 
     client.close();

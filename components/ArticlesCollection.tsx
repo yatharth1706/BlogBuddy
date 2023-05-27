@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Data from "./../dummyData.json";
 import BlogsSkeleton from "./BlogsSkeleton";
 import Link from "next/link";
-import { BookmarkIcon } from "lucide-react";
+import { BookmarkIcon, Heart } from "lucide-react";
 import { userInfo } from "os";
 import { useRecoilState } from "recoil";
 import { blogsList } from "@/atoms/allBlogs";
@@ -20,16 +20,20 @@ type ArticleCardDetails = {
   blogPic: String;
   createdAt: String;
   tags?: String;
+  likeCount?: Number;
   user?: {
     readingList?: String[];
+    likeList?: String[];
   };
   handleBookmark?: (blogId: String) => void;
+  handleLike?: (blogId: String) => void;
 };
 
 type BlogData = {
   _id: String;
   blogBanner: String;
   blogDescription: String;
+  likeCount?: Number;
   tags?: String;
   blogTitle: String;
   createdBy: String;
@@ -97,6 +101,17 @@ function ArticleCard(props: ArticleCardDetails) {
           ))}
         </div>
         <div className="flex gap-4 mb-6">
+          <div className="flex gap-2">
+            <Heart
+              className={`hover:fill-red-500 cursor-pointer text-gray-700 ${
+                props?.user?.likeList?.includes(props.id)
+                  ? "fill-red-600 text-red-600"
+                  : ""
+              }`}
+              onClick={() => props?.handleLike(props.id)}
+            />
+            <span>{String(props?.likeCount ?? 0)}</span>
+          </div>
           <BookmarkIcon
             className={`hover:fill-gray-500 cursor-pointer text-gray-700 ${
               props?.user?.readingList?.includes(props.id)
@@ -141,6 +156,31 @@ export default function ArticlesCollection({
       console.log(blogs);
       const userId = localStorage.getItem("userId") ?? "";
       const response = await fetch("/api/blog/bookmark", {
+        method: "PUT",
+        body: JSON.stringify({
+          userId,
+          blogId,
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+
+      const finalResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error(finalResponse?.message ?? "Network Error");
+      }
+    } catch (err) {
+      toast(String(err));
+    }
+  };
+
+  const handleLike = async (blogId: String) => {
+    try {
+      console.log(blogs);
+      const userId = localStorage.getItem("userId") ?? "";
+      const response = await fetch("/api/blog/like", {
         method: "PUT",
         body: JSON.stringify({
           userId,
@@ -221,6 +261,7 @@ export default function ArticlesCollection({
       {blogs.map((blogData: BlogData) => (
         <ArticleCard
           id={blogData?._id as string}
+          likeCount={blogData?.likeCount as number}
           key={blogData?._id as string}
           authorName={blogData.user?.name}
           authorBio={blogData.user.bio}
@@ -232,6 +273,7 @@ export default function ArticlesCollection({
           tags={blogData.tags}
           user={userInfo ?? {}}
           handleBookmark={handleBookmark}
+          handleLike={handleLike}
         />
       ))}
     </div>
