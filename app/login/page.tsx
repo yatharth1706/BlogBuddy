@@ -39,6 +39,8 @@ function Login() {
 
       if (response.ok) {
         localStorage.setItem("jwt", finalResponse.token);
+        localStorage.setItem("userId", finalResponse.id);
+
         router.push("/");
       } else {
         throw new Error(finalResponse?.message ?? "network error");

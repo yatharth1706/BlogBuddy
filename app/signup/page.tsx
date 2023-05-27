@@ -40,7 +40,10 @@ function Signup() {
       const finalResponse = await response.json();
 
       if (response.ok) {
-        router.push("/login");
+        const userId = finalResponse?.id;
+        localStorage.setItem("jwt", finalResponse.token);
+        localStorage.setItem("userId", finalResponse.id);
+        router.push("/profile/" + userId);
       } else {
         throw new Error(finalResponse?.message ?? "network error");
       }

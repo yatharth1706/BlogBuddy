@@ -40,7 +40,8 @@ export default function MyReadingList() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="font-medium text-lg">My Reading List</h1>
-      {Data.readingList.map((reading) => (
+      "No Data Yet"
+      {/* {Data.readingList.map((reading) => (
         <ReadingCard
           authorName={reading.authorName}
           authorPic={reading.authorImage}
@@ -49,7 +50,7 @@ export default function MyReadingList() {
           title={reading.title}
           createdAt={reading.createdAt}
         />
-      ))}
+      ))} */}
     </div>
   );
 }

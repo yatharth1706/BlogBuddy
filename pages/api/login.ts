@@ -44,7 +44,7 @@ export default async function handler(
     // Generate a JWT (you can use a library like jsonwebtoken for this)
     const token = generateJWT(user._id);
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({ message: "Login successful", token, id: user._id });
     client.close();
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });

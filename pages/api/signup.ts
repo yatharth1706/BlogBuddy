@@ -1,4 +1,4 @@
-import { hashPassword } from "@/lib/auth";
+import { generateJWT, hashPassword } from "@/lib/auth";
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -42,7 +42,11 @@ export default async function handler(
       password: hashedPassword,
     });
 
-    res.status(201).json({ message: "User created" });
+    const token = generateJWT(result.insertedId);
+
+    res
+      .status(201)
+      .json({ message: "User created", id: result.insertedId, token: token });
     client.close();
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
