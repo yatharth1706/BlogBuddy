@@ -8,6 +8,7 @@ import { userInfo } from "os";
 import { useRecoilState } from "recoil";
 import { blogsList } from "@/atoms/allBlogs";
 import { toast } from "react-toastify";
+import { getFilePreview } from "@/lib/appwrite";
 
 type ArticleCardDetails = {
   id: String;
@@ -47,6 +48,30 @@ type BlogData = {
 };
 
 function ArticleCard(props: ArticleCardDetails) {
+  const [picUrl, setPicUrl] = useState(props.blogPic);
+  const [authorImage, setAuthorImage] = useState(props.authorImage);
+
+  useEffect(() => {
+    if (!props.blogPic.includes("http")) {
+      getPicURL();
+    }
+    if (!props.authorImage.includes("http")) {
+      getAuthorImageURL();
+    }
+  }, []);
+
+  const getAuthorImageURL = async () => {
+    const response = await getFilePreview(props.authorImage as string);
+
+    setAuthorImage(response?.href as string);
+  };
+
+  const getPicURL = async () => {
+    const response = await getFilePreview(props.blogPic as string);
+
+    setPicUrl(response?.href as string);
+  };
+
   return (
     <div
       className="flex flex-col gap-5 border-b border-zinc-200"
@@ -55,7 +80,7 @@ function ArticleCard(props: ArticleCardDetails) {
       <Link href={"/blog/" + props.id}>
         <div className="flex gap-4">
           <img
-            src={props.authorImage as string}
+            src={authorImage as string}
             alt="Blog Author Image"
             className="w-12 h-12 object-cover border-2 border-white rounded-full"
           />
@@ -85,7 +110,7 @@ function ArticleCard(props: ArticleCardDetails) {
         <div className="w-4/12 p-2">
           <Link href={"/blog/" + props.id}>
             <img
-              src={props.blogPic as string}
+              src={picUrl as string}
               alt="Blog Banner Pic"
               className="rounded-lg w-80"
             />

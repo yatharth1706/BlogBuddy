@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Data from "./../dummyData.json";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { getFilePreview } from "@/lib/appwrite";
 
 type ReadingCardDetails = {
   _id: String;
@@ -15,11 +16,35 @@ type ReadingCardDetails = {
 };
 
 function ReadingCard(props: ReadingCardDetails) {
+  const [picUrl, setPicUrl] = useState(props.image);
+  const [authorPic, setAuthorPic] = useState(props.authorPic);
+
+  useEffect(() => {
+    if (!props.image.includes("http")) {
+      getPicURL();
+    }
+    if (!props.authorPic.includes("http")) {
+      getAuthorPic();
+    }
+  }, []);
+
+  const getAuthorPic = async () => {
+    const response = await getFilePreview(props.authorPic as string);
+
+    setAuthorPic(response?.href as string);
+  };
+
+  const getPicURL = async () => {
+    const response = await getFilePreview(props.image as string);
+
+    setPicUrl(response?.href as string);
+  };
+
   return (
     <div className="flex w-full gap-4 h-auto pb-4 ">
       <Link href={"/blog/" + props._id} className="w-6/12">
         <img
-          src={props.image as string}
+          src={picUrl as string}
           alt="Blog pic"
           className="w-full h-44 rounded-lg object-cover"
         />
@@ -33,7 +58,7 @@ function ReadingCard(props: ReadingCardDetails) {
         </Link>
         <div className="flex gap-1 w-full text-gray-600 text-xs items-center">
           <img
-            src={props.authorPic as string}
+            src={authorPic as string}
             className="w-6 h-6 rounded-full"
             alt="Author Pic"
           />

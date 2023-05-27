@@ -1,5 +1,6 @@
 "use client";
 import SingleBlogSkeleton from "@/components/SingleBlogSkeleton";
+import { getFilePreview } from "@/lib/appwrite";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -38,7 +39,22 @@ function page() {
       const finalResponse = await response.json();
 
       if (response.ok) {
-        setBlog(finalResponse?.blogs?.[0]);
+        let blogBanner = finalResponse?.blogs?.[0].blogBanner;
+        let authorPic = finalResponse?.blogs?.[0].user?.pic;
+        if (!blogBanner.includes("http")) {
+          let blogBannerResponse = await getFilePreview(blogBanner);
+          blogBanner = blogBannerResponse?.href;
+        }
+
+        if (!authorPic.includes("http")) {
+          let authorPicResponse = await getFilePreview(authorPic);
+          authorPic = authorPicResponse?.href;
+        }
+
+        let temp = { ...finalResponse?.blogs?.[0] };
+        temp.blogBanner = blogBanner;
+        temp.user.pic = authorPic;
+        setBlog({ ...temp });
       } else {
         throw new Error(finalResponse?.message ?? "network error");
       }

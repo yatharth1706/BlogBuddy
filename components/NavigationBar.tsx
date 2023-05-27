@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "react-toastify";
+import { getFilePreview, storeFile } from "@/lib/appwrite";
 
 export default function NavigationBar() {
   const [open, setOpen] = useState(false);
@@ -29,6 +30,8 @@ export default function NavigationBar() {
       _id?: String;
     };
   }>({});
+  const [userPic, setUserPic] = useState("");
+
   useEffect(() => {
     if (userId) {
       fetchUserInfo();
@@ -45,11 +48,21 @@ export default function NavigationBar() {
       if (response.ok) {
         console.log(finalResponse);
         setUserProfile(finalResponse);
+        getRightUserProfilePic(finalResponse.user.pic);
       } else {
         throw new Error(finalResponse?.message ?? "Network error");
       }
     } catch (err) {
       toast(String(err));
+    }
+  };
+
+  const getRightUserProfilePic = async (pic: string) => {
+    if (!pic.includes("http")) {
+      const response = await getFilePreview(pic);
+      setUserPic(response?.href as string);
+    } else {
+      setUserPic(pic);
     }
   };
 
@@ -65,14 +78,16 @@ export default function NavigationBar() {
   const handlePublish = async () => {
     try {
       // validations for the blog
-      const { blogBanner, blogTitle, blogDescription, blogTags } = blogData;
-      if (!blogBanner || !blogTitle || blogDescription || !blogTags) {
+      const { blogTitle, blogDescription, blogTags } = blogData;
+      if (!blogTitle || !blogDescription || !blogTags) {
         return toast("All fields are required");
       }
+      const fileResponse = await storeFile();
+
       const response = await fetch("/api/blog", {
         method: "POST",
         body: JSON.stringify({
-          blogBanner,
+          blogBanner: fileResponse?.$id,
           blogTitle,
           blogDescription,
           blogTags,
@@ -124,9 +139,9 @@ export default function NavigationBar() {
         {token && (
           <DropdownMenu onOpenChange={(open) => setOpen(open)}>
             <DropdownMenuTrigger>
-              {userProfile?.user ? (
+              {userPic ? (
                 <img
-                  src={userProfile?.user?.pic as string}
+                  src={userPic}
                   alt="Profile pic"
                   className="w-8 h-8 rounded-full object-cover"
                 />

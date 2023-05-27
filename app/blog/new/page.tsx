@@ -1,22 +1,40 @@
 "use client";
 import { newBlog } from "@/atoms/blog";
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 
 function page() {
   const [blog, setBlog] = useRecoilState(newBlog);
+  const [filePreview, setFilePreview] = useState("");
+
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFilePreview("");
+    }
+  };
 
   return (
     <div className="flex flex-col max-w-4xl mx-auto py-16 gap-3 text-gray-700">
       <label>Blog Banner</label>
 
       <input
-        type="text"
-        value={blog.blogBanner}
+        type="file"
         className="p-2 outline-sky-300 border border-gray-300 rounded"
-        placeholder="Enter your blog banner url here"
-        onChange={(e) => setBlog({ ...blog, blogBanner: e.target.value })}
+        id="uploader"
+        onChange={handleFileChange}
       />
+
+      {filePreview && (
+        <img className="w-full" src={filePreview} alt="Blog Banner" />
+      )}
 
       <label>Tags</label>
 

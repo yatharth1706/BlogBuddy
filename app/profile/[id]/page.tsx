@@ -1,4 +1,5 @@
 "use client";
+import { storeFile } from "@/lib/appwrite";
 import { Formik, FormikValues } from "formik";
 import { useParams, useRouter } from "next/navigation";
 import { type } from "os";
@@ -21,6 +22,7 @@ type UserInfo = {
 
 export default function page() {
   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "", email: "" });
+  const [filePreview, setFilePreview] = useState("");
   const params = useParams();
   const router = useRouter();
 
@@ -60,12 +62,29 @@ export default function page() {
     bio: userInfo?.bio ?? "",
   };
 
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFilePreview("");
+    }
+  };
+
   const formSubmit = async (values: FormikValues) => {
     try {
       const { name, email, bio, pic } = values;
-      if (!pic) {
-        return toast("Profile pic is mandatory");
+      if (!bio) {
+        return toast("Bio is mandatory");
       }
+
+      const fileResponse = await storeFile();
+
       const userId = params?.id;
       const response = await fetch("/api/user/profile?id=" + userId, {
         method: "PUT",
@@ -73,7 +92,7 @@ export default function page() {
           name,
           email,
           bio,
-          pic,
+          pic: fileResponse?.$id,
         }),
         headers: {
           "content-type": "application/json",
@@ -94,7 +113,7 @@ export default function page() {
   };
 
   return (
-    <div className="max-w-xl mx-auto h-screen flex justify-center items-center">
+    <div className="max-w-xl mx-auto h-auto pt-20 flex justify-center items-center">
       <Formik
         enableReinitialize={true}
         initialValues={formInitialValues}
@@ -109,6 +128,15 @@ export default function page() {
               <span className="text-lg font-medium">Update your profile</span>
             </div>
 
+            <label htmlFor="profilePic">Profile Pic</label>
+            <input
+              type="file"
+              id="uploader"
+              className="border-zinc-300 border px-4 py-2 outline-sky-300 rounded-md"
+              onChange={handleFileChange}
+            />
+
+            {filePreview && <img src={filePreview} />}
             <label htmlFor="email">Name</label>
             <input
               id="name"
@@ -124,13 +152,6 @@ export default function page() {
               disabled
               className="border-zinc-300 border px-4 py-2 outline-sky-300 rounded-md"
               {...formik.getFieldProps("email")}
-            />
-            <label htmlFor="profilePic">Profile Pic</label>
-            <input
-              id="profilePic"
-              type="profilePic"
-              className="border-zinc-300 border px-4 py-2 outline-sky-300 rounded-md"
-              {...formik.getFieldProps("pic")}
             />
             <label htmlFor="bio">Bio</label>
             <textarea

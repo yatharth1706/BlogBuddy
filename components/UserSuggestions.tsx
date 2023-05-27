@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import InterestedUsersSkeleton from "./InterestedUsersSkeleton";
 import { toast } from "react-toastify";
+import { getFilePreview } from "@/lib/appwrite";
 
 type UserSuggestionDetails = {
   bio?: String;
@@ -12,10 +13,24 @@ type UserSuggestionDetails = {
 };
 
 function UserSuggestionsCard(props: UserSuggestionDetails) {
+  const [userPic, setUserPic] = useState(props.pic);
+
+  useEffect(() => {
+    if (!props.pic?.includes("http")) {
+      getPicURL();
+    }
+  }, []);
+
+  const getPicURL = async () => {
+    const file = await getFilePreview(props.pic as string);
+
+    setUserPic(file?.href);
+  };
+
   return (
     <div className="flex gap-4">
       <img
-        src={props.pic as string}
+        src={userPic as string}
         alt="User Profile Pic"
         className="w-12 h-12 rounded-full object-cover"
       />
