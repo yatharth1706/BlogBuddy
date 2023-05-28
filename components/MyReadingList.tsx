@@ -23,13 +23,14 @@ function ReadingCard(props: ReadingCardDetails) {
   const [authorPic, setAuthorPic] = useState(props.authorPic);
 
   useEffect(() => {
+    console.log(props);
     if (!props?.image?.includes("http")) {
       getPicURL();
     }
     if (!props?.authorPic?.includes("http")) {
       getAuthorPic();
     }
-  }, []);
+  }, [props]);
 
   const getAuthorPic = async () => {
     const response = await getFilePreview(props?.authorPic as string);
@@ -110,6 +111,7 @@ export default function MyReadingList() {
 
   const fetchMyReadingList = async () => {
     try {
+      setReadingList([]);
       const userId =
         typeof window !== "undefined"
           ? window.localStorage.getItem("userId")
