@@ -211,7 +211,6 @@ export default function ArticlesCollection({
   useEffect(() => {
     fetchBlogs();
     fetchUser();
-    console.log(selectedType);
   }, [selectedType]);
 
   const handleBookmark = async (blogId: String) => {

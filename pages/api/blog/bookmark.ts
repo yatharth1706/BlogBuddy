@@ -27,8 +27,7 @@ export default async function handler(
         const user = await db
           .collection("users")
           .findOne({ _id: new ObjectId(userId) });
-        console.log(user);
-        console.log(blogId);
+
         const blogObjectId = new ObjectId(blogId);
 
         if (

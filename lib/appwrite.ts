@@ -13,13 +13,11 @@ export const storeFile = async () => {
     const uploader = document.getElementById(
       "uploader"
     ) as HTMLInputElement | null;
-    console.log(uploader);
     if (!uploader) {
       throw new Error("Uploader element not found");
     }
 
     const file = uploader.files?.[0];
-    console.log(file);
     if (!file) {
       throw new Error("No file selected");
     }

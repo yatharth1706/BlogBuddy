@@ -27,8 +27,7 @@ export default async function handler(
         const user = await db
           .collection("users")
           .findOne({ _id: new ObjectId(userId) });
-        console.log(user);
-        console.log(blogId);
+
         const blogObjectId = new ObjectId(blogId);
 
         if (
@@ -36,7 +35,6 @@ export default async function handler(
             readingId.equals(blogObjectId)
           )
         ) {
-          console.log("Present");
           await db
             .collection("users")
             .updateOne(
@@ -47,8 +45,6 @@ export default async function handler(
           await db
             .collection("blogs")
             .updateOne({ _id: blogObjectId }, { $inc: { likeCount: -1 } });
-
-          console.log("Blog removed from like list");
         } else {
           await db
             .collection("users")
@@ -59,8 +55,6 @@ export default async function handler(
           await db
             .collection("blogs")
             .updateOne({ _id: blogObjectId }, { $inc: { likeCount: 1 } });
-
-          console.log("Blog added to like list");
         }
 
         res.status(200).send({ message: "Liked / Unliked successfully" });

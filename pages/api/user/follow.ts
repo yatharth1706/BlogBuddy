@@ -28,7 +28,6 @@ export default async function handler(
         const user = await db
           .collection("users")
           .findOne({ _id: new ObjectId(userId) });
-        console.log(user);
 
         const followObjectId = new ObjectId(followUserId);
 
@@ -37,14 +36,12 @@ export default async function handler(
             followId.equals(followObjectId)
           )
         ) {
-          console.log("Present");
           await db
             .collection("users")
             .updateOne(
               { _id: new ObjectId(userId) },
               { $pull: { followList: followObjectId } }
             );
-          console.log("User removed from follow list");
         } else {
           await db
             .collection("users")
@@ -52,7 +49,6 @@ export default async function handler(
               { _id: new ObjectId(userId) },
               { $addToSet: { followList: followObjectId } }
             );
-          console.log("User added to following list");
         }
 
         res.status(200).send({ message: "Followed / unfollowed successfully" });

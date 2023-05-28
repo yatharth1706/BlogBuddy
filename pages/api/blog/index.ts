@@ -41,14 +41,11 @@ export default async function handler(
           .toArray();
       } else {
         let userInfo = [];
-        console.log(userId);
         if (userId) {
           userInfo = await db
             .collection("users")
             .find({ _id: new ObjectId(userId as string) })
             .toArray();
-
-          console.log(userInfo);
         }
         if (action === "MyBlogs") {
           blogsWithUserDetails = await db

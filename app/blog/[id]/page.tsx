@@ -67,7 +67,6 @@ function page() {
         );
       } else {
         setUserInfo(finalResponse?.user);
-        console.log(finalResponse?.user);
       }
     } catch (err) {
       toast(String(err));
@@ -112,13 +111,8 @@ function page() {
     } catch (err) {}
   };
 
-  useEffect(() => {
-    console.log(blog);
-  }, [blog]);
-
   const handleBookmark = async (blogId: String) => {
     try {
-      console.log(blog);
       const userId = localStorage.getItem("userId") ?? "";
       const response = await fetch("/api/blog/bookmark", {
         method: "PUT",
@@ -230,11 +224,9 @@ function BlogCard(props: BlogCardProps) {
   const [isLiked, setIsLiked] = useState(
     props?.user?.likeList?.includes(props.id as string)
   );
-  console.log(props?.user?.likeList?.includes(props.id as string));
   const [isBookmarked, setIsBookmarked] = useState(
     props?.user?.readingList?.includes(props.id as string)
   );
-  console.log(props?.user?.readingList?.includes(props.id as string));
   const [likeCount, setLikeCount] = useState(String(props?.likeCount ?? 0));
 
   useEffect(() => {

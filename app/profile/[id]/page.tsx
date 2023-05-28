@@ -41,7 +41,6 @@ export default function page() {
 
       const finalResponse = await response.json();
       if (response.ok) {
-        console.log(finalResponse);
         setUserInfo({
           ...userInfo,
           name: finalResponse?.user?.name,
@@ -109,7 +108,6 @@ export default function page() {
 
       const finalResponse = await response.json();
       if (response.ok) {
-        console.log(finalResponse);
         toast("User profile updated successfully");
         router.push("/");
       } else {
