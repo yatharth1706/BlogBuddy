@@ -85,12 +85,13 @@ function BlogPage() {
       if (response.ok) {
         let blogBanner = finalResponse?.blogs?.[0].blogBanner;
         let authorPic = finalResponse?.blogs?.[0].user?.pic;
-        if (!blogBanner.includes("http")) {
+        console.log(authorPic);
+        if (!blogBanner.includes("https")) {
           let blogBannerResponse = await getFilePreview(blogBanner);
           blogBanner = blogBannerResponse?.href;
         }
 
-        if (!authorPic.includes("http")) {
+        if (!authorPic.includes("https")) {
           let authorPicResponse = await getFilePreview(authorPic);
           authorPic = authorPicResponse?.href;
         }
@@ -98,9 +99,9 @@ function BlogPage() {
         let temp = { ...finalResponse?.blogs?.[0] };
         temp.blogBanner = blogBanner;
         temp.user.pic = authorPic;
+        console.log(temp);
         setBlog({ ...temp });
       } else {
-        0;
         throw new Error(
           finalResponse?.message
             ? finalResponse?.message
@@ -196,7 +197,7 @@ function BlogPage() {
           )}
           description={blog?.blogDescription}
           tags={blog?.tags}
-          user={userInfo}
+          user={blog?.user}
           handleBookmark={handleBookmark}
           handleLike={handleLike}
         />
