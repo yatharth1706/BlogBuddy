@@ -60,7 +60,13 @@ function Signup() {
         toast("User created successfully");
         router.push("/profile/" + userId);
       } else {
-        throw new Error(finalResponse?.message ?? "network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));

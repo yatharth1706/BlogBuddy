@@ -51,7 +51,13 @@ export default function NavigationBar() {
         setUserProfile(finalResponse);
         getRightUserProfilePic(finalResponse.user.pic);
       } else {
-        throw new Error(finalResponse?.message ?? "Network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));
@@ -84,7 +90,10 @@ export default function NavigationBar() {
       if (!blogTitle || !blogDescription || !blogTags) {
         return toast("All fields are required");
       }
-      const fileResponse = await storeFile();
+      let fileResponse;
+      if (localStorage.getItem("jwt")) {
+        fileResponse = await storeFile();
+      }
 
       const response = await fetch("/api/blog", {
         method: "POST",
@@ -98,6 +107,7 @@ export default function NavigationBar() {
         }),
         headers: {
           "content-type": "application/json",
+          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
         },
       });
 
@@ -107,7 +117,13 @@ export default function NavigationBar() {
         toast("Blog published successfully");
         router.push("/");
       } else {
-        throw new Error(finalResponse?.message ?? "Network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));

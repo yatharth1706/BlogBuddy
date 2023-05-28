@@ -56,7 +56,13 @@ function Login() {
         toast("Logged in successfully");
         router.push("/");
       } else {
-        throw new Error(finalResponse?.message ?? "network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));

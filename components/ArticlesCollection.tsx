@@ -9,6 +9,7 @@ import { useRecoilState } from "recoil";
 import { blogsList } from "@/atoms/allBlogs";
 import { toast } from "react-toastify";
 import { getFilePreview } from "@/lib/appwrite";
+import { homePageSettings } from "@/atoms/homePageSettings";
 
 type ArticleCardDetails = {
   id: String;
@@ -50,6 +51,18 @@ type BlogData = {
 function ArticleCard(props: ArticleCardDetails) {
   const [picUrl, setPicUrl] = useState(props.blogPic);
   const [authorImage, setAuthorImage] = useState(props.authorImage);
+  const [isLiked, setIsLiked] = useState(
+    props?.user?.likeList?.includes(props.id)
+  );
+  const [isBookmarked, setIsBookmarked] = useState(
+    props?.user?.readingList?.includes(props.id)
+  );
+  const [likeCount, setLikeCount] = useState(String(props?.likeCount ?? 0));
+
+  useEffect(() => {
+    setIsLiked(props?.user?.likeList?.includes(props.id));
+    setIsBookmarked(props?.user?.readingList?.includes(props.id));
+  }, [props?.user]);
 
   useEffect(() => {
     if (!props.blogPic.includes("http")) {
@@ -70,6 +83,30 @@ function ArticleCard(props: ArticleCardDetails) {
     const response = await getFilePreview(props.blogPic as string);
 
     setPicUrl(response?.href as string);
+  };
+
+  const handleLike = () => {
+    if (isLiked) {
+      setIsLiked(false);
+      setLikeCount(String(parseInt(likeCount) - 1));
+    } else {
+      setIsLiked(true);
+      setLikeCount(String(parseInt(likeCount) + 1));
+    }
+    if (props.handleLike) {
+      props.handleLike(props.id);
+    }
+  };
+
+  const handleBookmark = () => {
+    if (isBookmarked) {
+      setIsBookmarked(false);
+    } else {
+      setIsBookmarked(true);
+    }
+    if (props.handleBookmark) {
+      props.handleBookmark(props.id);
+    }
   };
 
   return (
@@ -129,21 +166,17 @@ function ArticleCard(props: ArticleCardDetails) {
           <div className="flex gap-2">
             <Heart
               className={`hover:fill-red-500 cursor-pointer text-gray-700 ${
-                props?.user?.likeList?.includes(props.id)
-                  ? "fill-red-600 text-red-600"
-                  : ""
+                isLiked ? "fill-red-600 text-red-600" : ""
               }`}
-              onClick={() => props?.handleLike(props.id)}
+              onClick={() => handleLike()}
             />
-            <span>{String(props?.likeCount ?? 0)}</span>
+            <span>{likeCount}</span>
           </div>
           <BookmarkIcon
             className={`hover:fill-gray-500 cursor-pointer text-gray-700 ${
-              props?.user?.readingList?.includes(props.id)
-                ? "fill-gray-800"
-                : ""
+              isBookmarked ? "fill-gray-800" : ""
             }`}
-            onClick={() => props?.handleBookmark(props.id)}
+            onClick={() => handleBookmark()}
           />
         </div>
       </div>
@@ -168,6 +201,7 @@ export default function ArticlesCollection({
   const [isFetchingBlogs, setIsFetchingBlogs] = useState(true);
   const [blogs, setBlogs] = useRecoilState(blogsList);
   const [userInfo, setUserInfo] = useState<User>({});
+  const [blogSettings, setBlogSettings] = useRecoilState(homePageSettings);
   const id = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -188,13 +222,25 @@ export default function ArticlesCollection({
         }),
         headers: {
           "content-type": "application/json",
+          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
         },
       });
 
       const finalResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(finalResponse?.message ?? "Network Error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
+      } else {
+        setBlogSettings({
+          ...blogSettings,
+          bookmarkClickCount: blogSettings.bookmarkClickCount + 1,
+        });
       }
     } catch (err) {
       toast(String(err));
@@ -213,13 +259,20 @@ export default function ArticlesCollection({
         }),
         headers: {
           "content-type": "application/json",
+          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
         },
       });
 
       const finalResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(finalResponse?.message ?? "Network Error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));
@@ -235,7 +288,13 @@ export default function ArticlesCollection({
       const finalResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(finalResponse?.message ?? "Network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       } else {
         setUserInfo(finalResponse?.user);
         console.log(finalResponse?.user);
@@ -259,7 +318,13 @@ export default function ArticlesCollection({
           console.log(finalResponse);
           setBlogs(finalResponse?.blogs);
         } else {
-          throw new Error(finalResponse?.message ?? "Network Error");
+          throw new Error(
+            finalResponse?.message
+              ? finalResponse?.message
+              : finalResponse?.error
+              ? finalResponse?.error
+              : "Network error"
+          );
         }
       } else {
         const response = await fetch("/api/blog" + "?action=All");
@@ -269,7 +334,13 @@ export default function ArticlesCollection({
           console.log(finalResponse);
           setBlogs(finalResponse?.blogs);
         } else {
-          throw new Error(finalResponse?.message ?? "Network Error");
+          throw new Error(
+            finalResponse?.message
+              ? finalResponse?.message
+              : finalResponse?.error
+              ? finalResponse?.error
+              : "Network error"
+          );
         }
       }
     } catch (err) {

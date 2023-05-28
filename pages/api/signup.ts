@@ -41,6 +41,7 @@ export default async function handler(
       email,
       password: hashedPassword,
       followList: [],
+      likeList: [],
     });
 
     const token = generateJWT(result.insertedId);

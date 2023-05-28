@@ -50,7 +50,13 @@ export default function page() {
           pic: finalResponse?.user?.pic ?? "",
         });
       } else {
-        throw new Error(finalResponse?.message ?? "Network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));
@@ -107,7 +113,13 @@ export default function page() {
         toast("User profile updated successfully");
         router.push("/");
       } else {
-        throw new Error(finalResponse?.message ?? "Network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));

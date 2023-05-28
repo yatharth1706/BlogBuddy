@@ -4,6 +4,8 @@ import Data from "./../dummyData.json";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { getFilePreview } from "@/lib/appwrite";
+import { useRecoilValue } from "recoil";
+import { homePageSettings } from "@/atoms/homePageSettings";
 
 type ReadingCardDetails = {
   _id: String;
@@ -20,22 +22,22 @@ function ReadingCard(props: ReadingCardDetails) {
   const [authorPic, setAuthorPic] = useState(props.authorPic);
 
   useEffect(() => {
-    if (!props.image.includes("http")) {
+    if (!props?.image?.includes("http")) {
       getPicURL();
     }
-    if (!props.authorPic.includes("http")) {
+    if (!props?.authorPic?.includes("http")) {
       getAuthorPic();
     }
   }, []);
 
   const getAuthorPic = async () => {
-    const response = await getFilePreview(props.authorPic as string);
+    const response = await getFilePreview(props?.authorPic as string);
 
     setAuthorPic(response?.href as string);
   };
 
   const getPicURL = async () => {
-    const response = await getFilePreview(props.image as string);
+    const response = await getFilePreview(props?.image as string);
 
     setPicUrl(response?.href as string);
   };
@@ -54,7 +56,7 @@ function ReadingCard(props: ReadingCardDetails) {
           <h2 className="font-medium">{props.title}</h2>
         </Link>
         <Link href={"/blog/" + props._id}>
-          <p>{props.description.slice(0, 80) + "..."}</p>
+          <p>{props?.description?.slice(0, 80) + "..."}</p>
         </Link>
         <div className="flex gap-1 w-full text-gray-600 text-xs items-center">
           <img
@@ -89,11 +91,16 @@ type ReadingListData = {
 };
 
 export default function MyReadingList() {
+  const bookmarkClickCount = useRecoilValue(homePageSettings);
   const [readingList, setReadingList] = useState<ReadingListData[]>([]);
 
   useEffect(() => {
     fetchMyReadingList();
   }, []);
+
+  useEffect(() => {
+    fetchMyReadingList();
+  }, [bookmarkClickCount]);
 
   const fetchMyReadingList = async () => {
     try {
@@ -106,7 +113,13 @@ export default function MyReadingList() {
       if (response?.ok) {
         setReadingList(finalResponse?.readingList);
       } else {
-        throw new Error(finalResponse?.message ?? "Network Error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));

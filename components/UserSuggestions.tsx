@@ -11,10 +11,22 @@ type UserSuggestionDetails = {
   pic?: String;
   _id?: String;
   userId?: String;
+  myUser: User;
 };
 
 function UserSuggestionsCard(props: UserSuggestionDetails) {
   const [userPic, setUserPic] = useState(props.pic);
+  const [isFollowed, setIsFollowed] = useState(
+    props?.myUser?.followList?.includes(props._id as string) ?? false
+  );
+
+  useEffect(() => {
+    setIsFollowed(
+      props?.myUser?.followList?.includes(props._id as string) ?? false
+    );
+  }, [props.myUser]);
+
+  console.log(props.myUser);
 
   useEffect(() => {
     if (!props.pic?.includes("http")) {
@@ -24,6 +36,9 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
 
   const handleFollow = async (followId: string) => {
     try {
+      if (followId && props?.userId) {
+        setIsFollowed(!isFollowed);
+      }
       const response = await fetch("/api/user/follow", {
         method: "PUT",
         body: JSON.stringify({
@@ -32,12 +47,19 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
         }),
         headers: {
           "content-type": "application/json",
+          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
         },
       });
 
       const finalResponse = await response.json();
       if (!response.ok) {
-        toast(finalResponse?.message ?? "Network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));
@@ -63,25 +85,66 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
       </div>
       <div className="ml-auto">
         <button
-          className="btn-secondary"
-          onClick={() => handleFollow(props?._id as string)}
+          className={
+            "btn-secondary " + (isFollowed ? "btn-primary bg-opacity-70" : "")
+          }
+          onClick={() => {
+            handleFollow(props?._id as string);
+          }}
         >
-          Follow
+          {isFollowed ? "Following" : "Follow"}
         </button>
       </div>
     </div>
   );
 }
 
+type User = {
+  readingList?: String[];
+  followList?: String[];
+  bio?: String;
+  email?: String;
+  name?: String;
+  pic?: String;
+  _id?: String;
+};
+
 export default function UserSuggestions() {
   const userId = localStorage.getItem("userId") ?? "";
+  const [userInfo, setUserInfo] = useState<User>({});
   const [userSuggestions, setUserSuggestions] = useState<
     UserSuggestionDetails[]
   >([]);
 
   useEffect(() => {
     fetchAllUsers();
+    fetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch("/api/user/profile?id=" + userId ?? "", {
+        method: "GET",
+      });
+
+      const finalResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
+      } else {
+        setUserInfo(finalResponse?.user);
+        console.log(finalResponse?.user);
+      }
+    } catch (err) {
+      toast(String(err));
+    }
+  };
 
   const fetchAllUsers = async () => {
     try {
@@ -93,7 +156,13 @@ export default function UserSuggestions() {
         setUserSuggestions(finalResponse?.users);
         console.log(finalResponse);
       } else {
-        throw new Error(finalResponse?.message ?? "Network error");
+        throw new Error(
+          finalResponse?.message
+            ? finalResponse?.message
+            : finalResponse?.error
+            ? finalResponse?.error
+            : "Network error"
+        );
       }
     } catch (err) {
       toast(String(err));
@@ -113,6 +182,7 @@ export default function UserSuggestions() {
               bio={sug.bio}
               pic={sug.pic}
               _id={sug._id}
+              myUser={userInfo}
             />
           )
       )}
