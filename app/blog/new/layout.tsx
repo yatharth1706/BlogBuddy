@@ -10,7 +10,7 @@ export default function layout({ children }: Props) {
   const router = useRouter();
   useEffect(() => {
     if (!localStorage.getItem("jwt")) {
-      router.push("/login");
+      router.replace("/login");
     }
   }, []);
 

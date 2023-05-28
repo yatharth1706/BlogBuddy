@@ -22,7 +22,7 @@ function page() {
   };
 
   return (
-    <div className="flex flex-col max-w-4xl mx-auto py-16 gap-3 text-gray-700">
+    <div className="flex flex-col max-w-4xl mx-auto py-16 px-4 gap-3 text-gray-700">
       <label>Blog Banner</label>
 
       <input

@@ -3,6 +3,7 @@ import { homePageSettings } from "@/atoms/homePageSettings";
 import SingleBlogSkeleton from "@/components/SingleBlogSkeleton";
 import { getFilePreview } from "@/lib/appwrite";
 import { BookmarkIcon, Heart } from "lucide-react";
+import moment from "moment";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -192,7 +193,9 @@ function page() {
           likeCount={blog?.likeCount as number}
           banner={blog?.blogBanner}
           title={blog?.blogTitle}
-          createdOn={blog?.createdOn}
+          createdOn={moment(new Date(blog?.createdOn as string)).format(
+            "MMM DD YYYY"
+          )}
           description={blog?.blogDescription}
           tags={blog?.tags}
           user={userInfo}
@@ -283,7 +286,9 @@ function BlogCard(props: BlogCardProps) {
             <span>{props.user?.name}</span>
             <div className="w-1 h-1 bg-gray-800 rounded-full"></div>
             <span className="text-gray-500 font-light text-xs">
-              {props.createdOn}
+              {moment(new Date(props?.createdOn as string)).format(
+                "MMM DD YYYY"
+              )}
             </span>
           </div>
           <p className="text-gray-500 w-full">{props.user?.bio}</p>

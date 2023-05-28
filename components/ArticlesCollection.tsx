@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Data from "./../dummyData.json";
 import BlogsSkeleton from "./BlogsSkeleton";
 import Link from "next/link";
 import { BookmarkIcon, Heart } from "lucide-react";
@@ -10,6 +9,7 @@ import { blogsList } from "@/atoms/allBlogs";
 import { toast } from "react-toastify";
 import { getFilePreview } from "@/lib/appwrite";
 import { homePageSettings } from "@/atoms/homePageSettings";
+import moment from "moment";
 
 type ArticleCardDetails = {
   id: String;
@@ -115,7 +115,7 @@ function ArticleCard(props: ArticleCardDetails) {
 
   return (
     <div
-      className="flex flex-col gap-5 border-b border-zinc-200"
+      className="flex flex-col gap-6 border-b border-zinc-200"
       key={props.key as string}
     >
       <Link href={"/blog/" + props.id}>
@@ -137,18 +137,25 @@ function ArticleCard(props: ArticleCardDetails) {
           </div>
         </div>
       </Link>
-      <div className="flex w-full gap-8">
-        <div className="w-8/12 flex flex-col gap-4">
+      <div className="flex flex-col md:flex-row w-full gap-8">
+        <div className="w-full md:w-8/12 flex flex-col gap-4">
           <Link href={"/blog/" + props.id}>
             <h1 className="font-bold text-2xl">{props.blogTitle}</h1>
           </Link>
           <Link href={"/blog/" + props.id}>
             <p className="text-gray-600">
-              {props.blogDescription.slice(0, 500) + "..."}
+              {props.blogDescription.slice(0, 400) + "..."}
             </p>
           </Link>
+          <div className="flex gap-4 mb-6">
+            {props?.tags?.split(",").map((tag) => (
+              <div className="w-44 rounded-full p-2 bg-gray-100 flex justify-center items-center">
+                {tag.trim()}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="w-4/12 p-2">
+        <div className="w-full mx-auto md:mx-0 md:w-4/12 p-2">
           <Link href={"/blog/" + props.id}>
             <img
               src={picUrl as string}
@@ -158,14 +165,7 @@ function ArticleCard(props: ArticleCardDetails) {
           </Link>
         </div>
       </div>
-      <div className="flex justify-between">
-        <div className="flex gap-4 mb-6">
-          {props?.tags?.split(",").map((tag) => (
-            <div className="w-44 rounded-full p-2 bg-gray-100 flex justify-center items-center">
-              {tag.trim()}
-            </div>
-          ))}
-        </div>
+      <div className="flex justify-end -mt-3">
         <div className="flex gap-4 mb-6">
           <div className="flex gap-2">
             <Heart
@@ -369,7 +369,9 @@ export default function ArticlesCollection({
           blogTitle={blogData.blogTitle}
           blogDescription={blogData.blogDescription}
           blogPic={blogData.blogBanner}
-          createdAt={blogData.createdOn}
+          createdAt={moment(new Date(blogData?.createdOn as string)).format(
+            "MMM DD YYYY"
+          )}
           tags={blogData.tags}
           user={userInfo ?? {}}
           handleBookmark={handleBookmark}

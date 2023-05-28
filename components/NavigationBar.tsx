@@ -140,9 +140,11 @@ export default function NavigationBar() {
 
   return !path?.includes("login") && !path?.includes("signup") ? (
     <div className="flex items-center py-3 border-b border-zinc-200 relative">
-      <h1 className="font-bold text-base text-center w-full">
-        {path?.includes("/blog/new") ? "Blog Draft" : "READER"}
-      </h1>
+      <Link href="/" className="text-center mx-auto">
+        <h1 className="font-bold text-base text-center w-full">
+          {path?.includes("/blog/new") ? "Blog Draft" : "READER"}
+        </h1>
+      </Link>
       <div className="flex items-center gap-4 absolute right-8 top-1/2 transform -translate-y-1/2">
         {path?.includes("/blog/new") ? (
           <button
@@ -173,10 +175,14 @@ export default function NavigationBar() {
               )}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={10}>
-              <Link href={"/profile/" + userId} onClick={handleItemActivate}>
-                <DropdownMenuLabel>My Profile</DropdownMenuLabel>
-              </Link>
-              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  handleItemActivate();
+                  router.push("/profile/" + userId);
+                }}
+              >
+                My Profile
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -129,7 +129,7 @@ export default function page() {
   };
 
   return (
-    <div className="max-w-xl mx-auto h-auto pt-20 flex justify-center items-center">
+    <div className="max-w-xl mx-auto h-auto pt-20 px-4 flex justify-center items-center">
       <Formik
         enableReinitialize={true}
         initialValues={formInitialValues}
@@ -137,7 +137,7 @@ export default function page() {
       >
         {(formik) => (
           <form
-            className="text-sm bg-white shadow border border-zinc-200 rounded-lg flex flex-col gap-3 p-12 w-full"
+            className="text-sm bg-white shadow border border-zinc-200 rounded-lg flex flex-col gap-3 p-5 md:p-12 w-full"
             onSubmit={formik.handleSubmit}
           >
             <div className="flex gap-3 items-center">

@@ -14,6 +14,8 @@ export default function authenticate(
     next(req, res);
   } else {
     // Token is invalid, respond with an error
-    res.status(401).json({ error: "Invalid token / User is not authorized" });
+    res
+      .status(401)
+      .json({ error: "User must be logged in to perform this action" });
   }
 }

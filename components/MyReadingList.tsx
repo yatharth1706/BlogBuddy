@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Data from "./../dummyData.json";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { getFilePreview } from "@/lib/appwrite";
 import { useRecoilValue } from "recoil";
 import { homePageSettings } from "@/atoms/homePageSettings";
+import moment from "moment";
 
 type ReadingCardDetails = {
   _id: String;
@@ -43,28 +43,28 @@ function ReadingCard(props: ReadingCardDetails) {
   };
 
   return (
-    <div className="flex w-full gap-4 h-auto pb-4 ">
-      <Link href={"/blog/" + props._id} className="w-6/12">
+    <div className="flex flex-col md:flex-row w-full gap-4 h-auto pb-4 ">
+      <Link href={"/blog/" + props._id} className="w-full md:w-6/12">
         <img
           src={picUrl as string}
           alt="Blog pic"
           className="w-full h-44 rounded-lg object-cover"
         />
       </Link>
-      <div className="flex flex-col gap-2 w-6/12">
+      <div className="flex flex-col gap-2 w-full md:w-6/12">
         <Link href={"/blog/" + props._id}>
           <h2 className="font-medium">{props.title}</h2>
         </Link>
         <Link href={"/blog/" + props._id}>
-          <p>{props?.description?.slice(0, 80) + "..."}</p>
+          <p>{props?.description?.slice(0, 60) + "..."}</p>
         </Link>
         <div className="flex gap-1 w-full text-gray-600 text-xs items-center">
           <img
             src={authorPic as string}
-            className="w-6 h-6 rounded-full"
+            className="w-6 h-6 rounded-full object-cover"
             alt="Author Pic"
           />
-          <span>{props.authorName}</span>
+          <span>{props.authorName?.slice(0, 9)}</span>
           <div className="w-1 h-1 rounded-full bg-gray-800"></div>
           <span>{props.createdAt}</span>
         </div>
@@ -140,7 +140,11 @@ export default function MyReadingList() {
           description={reading.blogDescription as string}
           image={reading.blogBanner as string}
           title={reading.blogTitle as string}
-          createdAt={reading.createdOn as string}
+          createdAt={
+            moment(new Date(reading?.createdOn as string)).format(
+              "MMM DD YYYY"
+            ) as string
+          }
         />
       ))}
     </div>

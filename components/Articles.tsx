@@ -27,7 +27,7 @@ export default function Articles() {
   };
 
   return (
-    <div className="p-4 w-9/12 border-r border-zinc-200">
+    <div className="w-full p-4 md:w-9/12 md:border-r border-zinc-200">
       <div className="flex justify-between items-center border-b border-zinc-200 pb-4 mb-8">
         <h1 className="font-bold text-base">Articles</h1>
         <DropdownMenu onOpenChange={(open) => setOpen(open)}>
