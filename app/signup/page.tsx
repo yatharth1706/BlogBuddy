@@ -55,8 +55,11 @@ function Signup() {
 
       if (response.ok) {
         const userId = finalResponse?.id;
-        localStorage.setItem("jwt", finalResponse.token);
-        localStorage.setItem("userId", finalResponse.id);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("jwt", finalResponse.token);
+          localStorage.setItem("userId", finalResponse.id);
+        }
+
         toast("User created successfully");
         router.push("/profile/" + userId);
       } else {

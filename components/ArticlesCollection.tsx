@@ -86,7 +86,7 @@ function ArticleCard(props: ArticleCardDetails) {
   };
 
   const handleLike = () => {
-    if (localStorage.getItem("jwt")) {
+    if (window && window.localStorage.getItem("jwt")) {
       if (isLiked) {
         setIsLiked(false);
         setLikeCount(String(parseInt(likeCount) - 1));
@@ -101,7 +101,7 @@ function ArticleCard(props: ArticleCardDetails) {
   };
 
   const handleBookmark = () => {
-    if (localStorage.getItem("jwt")) {
+    if (window && window.localStorage.getItem("jwt")) {
       if (isBookmarked) {
         setIsBookmarked(false);
       } else {
@@ -148,8 +148,11 @@ function ArticleCard(props: ArticleCardDetails) {
             </p>
           </Link>
           <div className="flex gap-4 mb-6">
-            {props?.tags?.split(",").map((tag) => (
-              <div className="w-44 rounded-full p-2 bg-gray-100 flex justify-center items-center">
+            {props?.tags?.split(",").map((tag, index) => (
+              <div
+                key={index.toString() + tag}
+                className="w-44 rounded-full p-2 bg-gray-100 flex justify-center items-center"
+              >
                 {tag.trim()}
               </div>
             ))}
@@ -206,7 +209,7 @@ export default function ArticlesCollection({
   const [blogs, setBlogs] = useRecoilState(blogsList);
   const [userInfo, setUserInfo] = useState<User>({});
   const [blogSettings, setBlogSettings] = useRecoilState(homePageSettings);
-  const id = localStorage.getItem("userId");
+  const id = window ? window.localStorage.getItem("userId") : "";
 
   useEffect(() => {
     fetchBlogs();
@@ -215,7 +218,7 @@ export default function ArticlesCollection({
 
   const handleBookmark = async (blogId: String) => {
     try {
-      const userId = localStorage.getItem("userId") ?? "";
+      const userId = window ? window.localStorage.getItem("userId") : "";
       const response = await fetch("/api/blog/bookmark", {
         method: "PUT",
         body: JSON.stringify({
@@ -224,7 +227,7 @@ export default function ArticlesCollection({
         }),
         headers: {
           "content-type": "application/json",
-          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
+          Authorization: `${window ? window.localStorage.getItem("jwt") : ""}`,
         },
       });
 
@@ -251,7 +254,7 @@ export default function ArticlesCollection({
 
   const handleLike = async (blogId: String) => {
     try {
-      const userId = localStorage.getItem("userId") ?? "";
+      const userId = window ? window.localStorage.getItem("userId") : "";
       const response = await fetch("/api/blog/like", {
         method: "PUT",
         body: JSON.stringify({
@@ -260,7 +263,7 @@ export default function ArticlesCollection({
         }),
         headers: {
           "content-type": "application/json",
-          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
+          Authorization: `${window ? window.localStorage.getItem("jwt") : ""}`,
         },
       });
 

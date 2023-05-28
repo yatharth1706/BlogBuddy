@@ -15,6 +15,7 @@ type ReadingCardDetails = {
   authorName: String;
   authorPic: String;
   createdAt: String;
+  key: String;
 };
 
 function ReadingCard(props: ReadingCardDetails) {
@@ -43,7 +44,10 @@ function ReadingCard(props: ReadingCardDetails) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full gap-4 h-auto pb-4 ">
+    <div
+      key={props.key as string}
+      className="flex flex-col md:flex-row w-full gap-4 h-auto pb-4 "
+    >
       <Link href={"/blog/" + props._id} className="w-full md:w-6/12">
         <img
           src={picUrl as string}
@@ -104,7 +108,7 @@ export default function MyReadingList() {
 
   const fetchMyReadingList = async () => {
     try {
-      const userId = localStorage.getItem("userId") ?? "";
+      const userId = window ? window.localStorage.getItem("userId") : "";
       const response = await fetch("/api/user/readinglist?id=" + userId, {
         method: "GET",
       });
@@ -134,6 +138,7 @@ export default function MyReadingList() {
       )}
       {readingList.map((reading) => (
         <ReadingCard
+          key={reading?._id as string}
           _id={reading._id as string}
           authorName={reading?.user?.name as string}
           authorPic={reading?.user?.pic as string}

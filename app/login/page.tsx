@@ -51,8 +51,10 @@ function Login() {
       const finalResponse = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("jwt", finalResponse.token);
-        localStorage.setItem("userId", finalResponse.id);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("jwt", finalResponse.token);
+          localStorage.setItem("userId", finalResponse.id);
+        }
         toast("Logged in successfully");
         router.push("/");
       } else {

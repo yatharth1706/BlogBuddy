@@ -18,8 +18,8 @@ import { getFilePreview, storeFile } from "@/lib/appwrite";
 
 export default function NavigationBar() {
   const [open, setOpen] = useState(false);
-  const token = localStorage.getItem("jwt");
-  const userId = localStorage.getItem("userId") ?? "";
+  const token = window ? window.localStorage.getItem("jwt") : "";
+  const userId = window ? window.localStorage.getItem("userId") : "";
 
   const [userProfile, setUserProfile] = useState<{
     user?: {
@@ -90,7 +90,7 @@ export default function NavigationBar() {
         return toast("All fields are required");
       }
       let fileResponse;
-      if (localStorage.getItem("jwt")) {
+      if (window && window.localStorage.getItem("jwt")) {
         fileResponse = await storeFile();
       }
 
@@ -101,12 +101,12 @@ export default function NavigationBar() {
           blogTitle,
           blogDescription,
           blogTags,
-          createdBy: localStorage.getItem("userId"),
+          createdBy: window ? window.localStorage.getItem("userId") : "",
           createdOn: new Date().toDateString(),
         }),
         headers: {
           "content-type": "application/json",
-          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
+          Authorization: `${window ? window.localStorage.getItem("jwt") : ""}`,
         },
       });
 
@@ -132,7 +132,7 @@ export default function NavigationBar() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    if (window) window.localStorage.clear();
     handleItemActivate();
     window.location.reload();
   };

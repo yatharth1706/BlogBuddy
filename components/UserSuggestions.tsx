@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { getFilePreview } from "@/lib/appwrite";
 
 type UserSuggestionDetails = {
+  key?: String;
   bio?: String;
   email?: String;
   name?: String;
@@ -45,7 +46,7 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
         }),
         headers: {
           "content-type": "application/json",
-          Authorization: `${localStorage.getItem("jwt") ?? ""}`,
+          Authorization: `${window ? window.localStorage.getItem("jwt") : ""}`,
         },
       });
 
@@ -71,7 +72,7 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
   };
 
   return (
-    <div className="flex gap-4">
+    <div key={props?.key as string} className="flex gap-4">
       <img
         src={userPic as string}
         alt="User Profile Pic"
@@ -173,6 +174,7 @@ export default function UserSuggestions() {
         (sug) =>
           sug._id !== userId && (
             <UserSuggestionsCard
+              key={userId}
               userId={userId}
               name={sug.name}
               bio={sug.bio}
