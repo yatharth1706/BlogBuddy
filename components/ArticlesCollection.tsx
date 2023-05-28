@@ -86,7 +86,7 @@ function ArticleCard(props: ArticleCardDetails) {
   };
 
   const handleLike = () => {
-    if (window && window.localStorage.getItem("jwt")) {
+    if (typeof window !== "undefined" && window.localStorage.getItem("jwt")) {
       if (isLiked) {
         setIsLiked(false);
         setLikeCount(String(parseInt(likeCount) - 1));
@@ -101,7 +101,7 @@ function ArticleCard(props: ArticleCardDetails) {
   };
 
   const handleBookmark = () => {
-    if (window && window.localStorage.getItem("jwt")) {
+    if (typeof window !== "undefined" && window.localStorage.getItem("jwt")) {
       if (isBookmarked) {
         setIsBookmarked(false);
       } else {
@@ -209,7 +209,8 @@ export default function ArticlesCollection({
   const [blogs, setBlogs] = useRecoilState(blogsList);
   const [userInfo, setUserInfo] = useState<User>({});
   const [blogSettings, setBlogSettings] = useRecoilState(homePageSettings);
-  const id = window ? window.localStorage.getItem("userId") : "";
+  const id =
+    typeof window !== "undefined" ? window.localStorage.getItem("userId") : "";
 
   useEffect(() => {
     fetchBlogs();
@@ -218,7 +219,10 @@ export default function ArticlesCollection({
 
   const handleBookmark = async (blogId: String) => {
     try {
-      const userId = window ? window.localStorage.getItem("userId") : "";
+      const userId =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("userId")
+          : "";
       const response = await fetch("/api/blog/bookmark", {
         method: "PUT",
         body: JSON.stringify({
@@ -227,7 +231,11 @@ export default function ArticlesCollection({
         }),
         headers: {
           "content-type": "application/json",
-          Authorization: `${window ? window.localStorage.getItem("jwt") : ""}`,
+          Authorization: `${
+            typeof window !== "undefined"
+              ? window.localStorage.getItem("jwt")
+              : ""
+          }`,
         },
       });
 
@@ -254,7 +262,10 @@ export default function ArticlesCollection({
 
   const handleLike = async (blogId: String) => {
     try {
-      const userId = window ? window.localStorage.getItem("userId") : "";
+      const userId =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("userId")
+          : "";
       const response = await fetch("/api/blog/like", {
         method: "PUT",
         body: JSON.stringify({
@@ -263,7 +274,11 @@ export default function ArticlesCollection({
         }),
         headers: {
           "content-type": "application/json",
-          Authorization: `${window ? window.localStorage.getItem("jwt") : ""}`,
+          Authorization: `${
+            typeof window !== "undefined"
+              ? window.localStorage.getItem("jwt")
+              : ""
+          }`,
         },
       });
 

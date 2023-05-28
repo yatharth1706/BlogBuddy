@@ -108,7 +108,10 @@ export default function MyReadingList() {
 
   const fetchMyReadingList = async () => {
     try {
-      const userId = window ? window.localStorage.getItem("userId") : "";
+      const userId =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("userId")
+          : "";
       const response = await fetch("/api/user/readinglist?id=" + userId, {
         method: "GET",
       });

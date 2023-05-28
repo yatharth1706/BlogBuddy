@@ -46,7 +46,11 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
         }),
         headers: {
           "content-type": "application/json",
-          Authorization: `${window ? window.localStorage.getItem("jwt") : ""}`,
+          Authorization: `${
+            typeof window !== "undefined"
+              ? window.localStorage.getItem("jwt")
+              : ""
+          }`,
         },
       });
 
