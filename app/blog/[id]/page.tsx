@@ -191,7 +191,7 @@ function BlogPage() {
           id={blog?._id as string}
           likeCount={blog?.likeCount as number}
           banner={blog?.blogBanner}
-          blogAuthor={blog?.user}
+          blogAuthor={blog?.user as User}
           title={blog?.blogTitle}
           createdOn={moment(new Date(blog?.createdOn as string)).format(
             "MMM DD YYYY"
