@@ -299,7 +299,7 @@ function BlogCard(props: BlogCardProps) {
       <div className="flex gap-4 mb-6">
         {props?.tags?.split(",").map((tag, index) => (
           <div
-            key={index.toString() + tag}
+            key={index.toString()}
             className="w-44 rounded-full p-2 bg-gray-100 flex justify-center items-center"
           >
             {tag.trim()}

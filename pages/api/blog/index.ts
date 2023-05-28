@@ -41,34 +41,39 @@ export default async function handler(
           .toArray();
       } else {
         let userInfo = [];
-        if (userId) {
+        if (userId != "null" && userId != undefined && userId !== null) {
           userInfo = await db
             .collection("users")
             .find({ _id: new ObjectId(userId as string) })
             .toArray();
         }
+
         if (action === "MyBlogs") {
-          blogsWithUserDetails = await db
-            .collection("blogs")
-            .aggregate([
-              {
-                $match: {
-                  createdBy: new ObjectId(userId as string),
+          if (userId != "null" && userId != undefined && userId !== null) {
+            blogsWithUserDetails = await db
+              .collection("blogs")
+              .aggregate([
+                {
+                  $match: {
+                    createdBy: new ObjectId(userId as string) ?? "",
+                  },
                 },
-              },
-              {
-                $lookup: {
-                  from: "users",
-                  localField: "createdBy",
-                  foreignField: "_id",
-                  as: "user",
+                {
+                  $lookup: {
+                    from: "users",
+                    localField: "createdBy",
+                    foreignField: "_id",
+                    as: "user",
+                  },
                 },
-              },
-              {
-                $unwind: "$user",
-              },
-            ])
-            .toArray();
+                {
+                  $unwind: "$user",
+                },
+              ])
+              .toArray();
+          } else {
+            blogsWithUserDetails = [];
+          }
         } else {
           blogsWithUserDetails = await db
             .collection("blogs")

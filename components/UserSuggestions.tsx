@@ -176,10 +176,10 @@ export default function UserSuggestions() {
       <h1 className="font-medium text-lg">People you might be interested</h1>
       {userSuggestions.length == 0 && <InterestedUsersSkeleton />}
       {userSuggestions.map(
-        (sug) =>
+        (sug, index) =>
           sug._id !== userId && (
             <UserSuggestionsCard
-              key={userId as string}
+              key={index.toString()}
               userId={userId as string}
               name={sug.name}
               bio={sug.bio}

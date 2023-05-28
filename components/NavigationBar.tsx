@@ -197,7 +197,9 @@ export default function NavigationBar() {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-        {!token && (
+        {!(typeof window !== "undefined"
+          ? window.localStorage.getItem("jwt")
+          : "") && (
           <Link href="/signup">
             <button className="btn-primary">Get Started</button>
           </Link>

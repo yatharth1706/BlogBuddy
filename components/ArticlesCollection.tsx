@@ -370,11 +370,11 @@ export default function ArticlesCollection({
     <div className="flex flex-col gap-6">
       {isFetchingBlogs && <BlogsSkeleton />}
       {!isFetchingBlogs && blogs.length === 0 && <span>No blogs yet</span>}
-      {blogs.map((blogData: BlogData) => (
+      {blogs.map((blogData: BlogData, index) => (
         <ArticleCard
           id={blogData?._id as string}
           likeCount={blogData?.likeCount as number}
-          key={blogData?._id as string}
+          key={String(index)}
           authorName={blogData.user?.name}
           authorBio={blogData.user.bio}
           authorImage={blogData.user.pic}

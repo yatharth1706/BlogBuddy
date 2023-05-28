@@ -32,9 +32,9 @@ export default function Articles() {
         <h1 className="font-bold text-base">Articles</h1>
         <DropdownMenu onOpenChange={(open) => setOpen(open)}>
           <DropdownMenuTrigger>
-            <button className="btn-secondary rounded-3xl font-light w-32">
-              <span>{settings.blogType}</span>
-            </button>
+            <div className="p-2 w-24 border border-gray-300 rounded-lg">
+              {settings.blogType}
+            </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={10}>
             <DropdownMenuSeparator />

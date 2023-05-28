@@ -23,7 +23,7 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse, db: Db) {
-  if (req.query.id) {
+  if (req.query.id != null && req.query.id !== "" && req.query.id !== "null") {
     const userId = new ObjectId(req.query.id as string);
     const result = await db.collection("users").findOne({ _id: userId });
 

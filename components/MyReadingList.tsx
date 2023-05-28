@@ -139,9 +139,9 @@ export default function MyReadingList() {
       {readingList.length === 0 && (
         <span className="text-sm text-gray-600">No Data Yet</span>
       )}
-      {readingList.map((reading) => (
+      {readingList.map((reading, index) => (
         <ReadingCard
-          key={reading?._id as string}
+          key={String(index)}
           _id={reading._id as string}
           authorName={reading?.user?.name as string}
           authorPic={reading?.user?.pic as string}
