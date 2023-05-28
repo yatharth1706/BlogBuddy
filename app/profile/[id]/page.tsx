@@ -1,5 +1,5 @@
 "use client";
-import { storeFile } from "@/lib/appwrite";
+import { getFilePreview, storeFile } from "@/lib/appwrite";
 import { Formik, FormikValues } from "formik";
 import { useParams, useRouter } from "next/navigation";
 import { type } from "os";
@@ -48,6 +48,14 @@ export default function ProfilePage() {
           bio: finalResponse?.user?.bio ?? "",
           pic: finalResponse?.user?.pic ?? "",
         });
+        if (finalResponse?.user?.pic) {
+          if (!finalResponse?.user?.pic.includes("http")) {
+            let res = await getFilePreview(finalResponse?.user?.pic);
+            setFilePreview(res?.href as string);
+          } else {
+            setFilePreview(finalResponse?.user?.pic);
+          }
+        }
       } else {
         throw new Error(
           finalResponse?.message
@@ -109,7 +117,7 @@ export default function ProfilePage() {
       const finalResponse = await response.json();
       if (response.ok) {
         toast("User profile updated successfully");
-        router.push("/");
+        window.location.href = "/";
       } else {
         throw new Error(
           finalResponse?.message
@@ -150,7 +158,9 @@ export default function ProfilePage() {
               onChange={handleFileChange}
             />
 
-            {filePreview && <img src={filePreview} />}
+            {filePreview && (
+              <img src={filePreview} alt="File preview" loading="lazy" />
+            )}
             <label htmlFor="email">Name</label>
             <input
               id="name"

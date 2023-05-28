@@ -15,13 +15,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "react-toastify";
 import { getFilePreview, storeFile } from "@/lib/appwrite";
+import moment from "moment";
 
 export default function NavigationBar() {
   const [open, setOpen] = useState(false);
-  const token =
-    typeof window !== "undefined" ? window.localStorage.getItem("jwt") : "";
-  const userId =
-    typeof window !== "undefined" ? window.localStorage.getItem("userId") : "";
+  const [token, setToken] = useState("");
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(window.localStorage.getItem("jwt") ?? "");
+      setUserId(window.localStorage.getItem("userId") ?? "");
+    }
+  }, []);
 
   const [userProfile, setUserProfile] = useState<{
     user?: {
@@ -80,7 +86,6 @@ export default function NavigationBar() {
 
   const path = usePathname();
   const blogData = useRecoilValue(newBlog);
-
   const router = useRouter();
 
   const handlePublish = async () => {
@@ -107,7 +112,7 @@ export default function NavigationBar() {
             typeof window !== "undefined"
               ? window.localStorage.getItem("userId")
               : "",
-          createdOn: new Date().toDateString(),
+          createdOn: moment(),
         }),
         headers: {
           "content-type": "application/json",
@@ -179,6 +184,7 @@ export default function NavigationBar() {
                   src={userPic}
                   alt="Profile pic"
                   className="w-8 h-8 rounded-full object-cover"
+                  loading="lazy"
                 />
               ) : (
                 <div className="rounded-full bg-gray-300 h-8 w-8"></div>
@@ -197,9 +203,7 @@ export default function NavigationBar() {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-        {!(typeof window !== "undefined"
-          ? window.localStorage.getItem("jwt")
-          : "") && (
+        {!token && (
           <Link href="/signup">
             <button className="btn-primary">Get Started</button>
           </Link>

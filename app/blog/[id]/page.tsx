@@ -269,6 +269,7 @@ function BlogCard(props: BlogCardProps) {
           src={props.banner as string}
           alt="Blog Banner Pic"
           className="rounded-lg w-full"
+          loading="lazy"
         />
       </div>
       <div className="flex gap-4 w-full">
@@ -276,6 +277,7 @@ function BlogCard(props: BlogCardProps) {
           src={props.user?.pic as string}
           alt="Blog Author Image"
           className="w-12 h-12 object-cover border-2 border-white rounded-full"
+          loading="lazy"
         />
         <div className="flex flex-col gap-1 w-full">
           <div className="font-semibold flex gap-3 items-center">

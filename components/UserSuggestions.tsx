@@ -81,6 +81,7 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
         src={userPic as string}
         alt="User Profile Pic"
         className="w-12 h-12 rounded-full object-cover"
+        loading="lazy"
       />
       <div className="flex flex-col gap-1">
         <h2 className="font-medium">{props.name}</h2>

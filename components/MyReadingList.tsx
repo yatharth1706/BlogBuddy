@@ -53,6 +53,7 @@ function ReadingCard(props: ReadingCardDetails) {
           src={picUrl as string}
           alt="Blog pic"
           className="w-full h-44 rounded-lg object-cover"
+          loading="lazy"
         />
       </Link>
       <div className="flex flex-col gap-2 w-full md:w-6/12">
@@ -67,6 +68,7 @@ function ReadingCard(props: ReadingCardDetails) {
             src={authorPic as string}
             className="w-6 h-6 rounded-full object-cover"
             alt="Author Pic"
+            loading="lazy"
           />
           <span>{props.authorName?.slice(0, 9)}</span>
           <div className="w-1 h-1 rounded-full bg-gray-800"></div>

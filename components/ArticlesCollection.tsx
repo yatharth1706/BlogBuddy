@@ -124,6 +124,7 @@ function ArticleCard(props: ArticleCardDetails) {
             src={authorImage as string}
             alt="Blog Author Image"
             className="w-12 h-12 object-cover border-2 border-white rounded-full"
+            loading="lazy"
           />
           <div className="flex flex-col gap-1">
             <div className="font-semibold flex gap-3 items-center">
@@ -164,6 +165,7 @@ function ArticleCard(props: ArticleCardDetails) {
               src={picUrl as string}
               alt="Blog Banner Pic"
               className="rounded-lg w-80"
+              loading="lazy"
             />
           </Link>
         </div>

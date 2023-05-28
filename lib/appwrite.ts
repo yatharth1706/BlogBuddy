@@ -30,7 +30,7 @@ export const storeFile = async () => {
 
     return promise;
   } catch (err) {
-    alert(err);
+    throw new Error(err as string);
   }
 };
 

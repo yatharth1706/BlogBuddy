@@ -69,6 +69,9 @@ export default async function handler(
                 {
                   $unwind: "$user",
                 },
+                {
+                  $sort: { createdOn: -1 }, // Sort in descending order based on createdOn field
+                },
               ])
               .toArray();
           } else {
@@ -88,6 +91,9 @@ export default async function handler(
               },
               {
                 $unwind: "$user",
+              },
+              {
+                $sort: { createdOn: -1 }, // Sort in descending order based on createdOn field
               },
             ])
             .toArray();

@@ -33,7 +33,12 @@ function NewBlogPage() {
       />
 
       {filePreview && (
-        <img className="w-full" src={filePreview} alt="Blog Banner" />
+        <img
+          className="w-full"
+          src={filePreview}
+          alt="Blog Banner"
+          loading="lazy"
+        />
       )}
 
       <label>Tags</label>
