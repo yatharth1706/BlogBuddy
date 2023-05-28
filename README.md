@@ -47,12 +47,6 @@ For bucketId and projectId replace it with your Appwrite cloud bucket and projec
   npm install
 ```
 
-- Run the project locally now
-
-```
-  npm run dev
-```
-
 - Install all libraries
 
 ```
