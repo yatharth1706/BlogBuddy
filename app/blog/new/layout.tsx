@@ -9,7 +9,7 @@ type Props = {
 export default function BlogLayout({ children }: Props) {
   const router = useRouter();
   useEffect(() => {
-    if (window && !window.localStorage.getItem("jwt")) {
+    if (typeof window !== "undefined" && !window.localStorage.getItem("jwt")) {
       router.replace("/login");
     }
   }, []);
