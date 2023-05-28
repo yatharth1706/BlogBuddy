@@ -56,7 +56,7 @@ function Login() {
           localStorage.setItem("userId", finalResponse.id);
         }
         toast("Logged in successfully");
-        router.push("/");
+        window.location.href = "/";
       } else {
         throw new Error(
           finalResponse?.message
