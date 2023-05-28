@@ -38,14 +38,8 @@ Blogging website built using following
 ```
 
 - Copy .env.example file to .env and replace required environment variables
-
-For bucketId and projectId replace it with your Appwrite cloud bucket and project ids
-
-- Install all libraries
-
-```
-  npm install
-```
+- Create mongodb cluster in mongodb atlas cloud service or locally then replace its connection url in environment variables
+- For bucketId and projectId replace it with your Appwrite cloud bucket and project ids
 
 - Install all libraries
 
