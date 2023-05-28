@@ -179,8 +179,8 @@ export default function UserSuggestions() {
         (sug) =>
           sug._id !== userId && (
             <UserSuggestionsCard
-              key={userId}
-              userId={userId}
+              key={userId as string}
+              userId={userId as string}
               name={sug.name}
               bio={sug.bio}
               pic={sug.pic}
