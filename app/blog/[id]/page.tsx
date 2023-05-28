@@ -35,11 +35,11 @@ type User = {
   _id?: String;
 };
 
-function page() {
+function Page() {
   const [blog, setBlog] = useState<BlogData>();
   const [blogSettings, setBlogSettings] = useRecoilState(homePageSettings);
   const [userInfo, setUserInfo] = useState<User>({});
-  const userId = localStorage.getItem("userId") ?? "";
+  const userId = window.localStorage.getItem("userId") ?? "";
 
   const path = usePathname();
   const id = path?.split("/").pop();
@@ -320,4 +320,4 @@ function BlogCard(props: BlogCardProps) {
   );
 }
 
-export default page;
+export default Page;

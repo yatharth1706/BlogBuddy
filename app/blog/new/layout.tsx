@@ -6,7 +6,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function layout({ children }: Props) {
+export default function Layout({ children }: Props) {
   const router = useRouter();
   useEffect(() => {
     if (!localStorage.getItem("jwt")) {
