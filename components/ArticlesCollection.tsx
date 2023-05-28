@@ -215,7 +215,6 @@ export default function ArticlesCollection({
 
   const handleBookmark = async (blogId: String) => {
     try {
-      console.log(blogs);
       const userId = localStorage.getItem("userId") ?? "";
       const response = await fetch("/api/blog/bookmark", {
         method: "PUT",
@@ -252,7 +251,6 @@ export default function ArticlesCollection({
 
   const handleLike = async (blogId: String) => {
     try {
-      console.log(blogs);
       const userId = localStorage.getItem("userId") ?? "";
       const response = await fetch("/api/blog/like", {
         method: "PUT",
@@ -300,7 +298,6 @@ export default function ArticlesCollection({
         );
       } else {
         setUserInfo(finalResponse?.user);
-        console.log(finalResponse?.user);
       }
     } catch (err) {
       toast(String(err));
@@ -318,7 +315,6 @@ export default function ArticlesCollection({
         const finalResponse = await response.json();
 
         if (response.ok) {
-          console.log(finalResponse);
           setBlogs(finalResponse?.blogs);
         } else {
           throw new Error(
@@ -334,7 +330,6 @@ export default function ArticlesCollection({
         const finalResponse = await response.json();
 
         if (response.ok) {
-          console.log(finalResponse);
           setBlogs(finalResponse?.blogs);
         } else {
           throw new Error(

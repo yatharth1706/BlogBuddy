@@ -35,14 +35,12 @@ export default async function handler(
             readingId.equals(blogObjectId)
           )
         ) {
-          console.log("Present");
           await db
             .collection("users")
             .updateOne(
               { _id: new ObjectId(userId) },
               { $pull: { readingList: blogObjectId } }
             );
-          console.log("Blog removed from reading list");
         } else {
           await db
             .collection("users")
@@ -50,7 +48,6 @@ export default async function handler(
               { _id: new ObjectId(userId) },
               { $addToSet: { readingList: blogObjectId } }
             );
-          console.log("Blog added to reading list");
         }
 
         res.status(200).send({ message: "Bookmarked successfully" });

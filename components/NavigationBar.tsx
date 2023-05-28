@@ -47,7 +47,6 @@ export default function NavigationBar() {
       const finalResponse = await response.json();
 
       if (response.ok) {
-        console.log(finalResponse);
         setUserProfile(finalResponse);
         getRightUserProfilePic(finalResponse.user.pic);
       } else {

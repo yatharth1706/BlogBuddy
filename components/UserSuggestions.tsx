@@ -26,8 +26,6 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
     );
   }, [props.myUser]);
 
-  console.log(props.myUser);
-
   useEffect(() => {
     if (!props.pic?.includes("http")) {
       getPicURL();
@@ -139,7 +137,6 @@ export default function UserSuggestions() {
         );
       } else {
         setUserInfo(finalResponse?.user);
-        console.log(finalResponse?.user);
       }
     } catch (err) {
       toast(String(err));
@@ -154,7 +151,6 @@ export default function UserSuggestions() {
 
       if (response?.ok) {
         setUserSuggestions(finalResponse?.users);
-        console.log(finalResponse);
       } else {
         throw new Error(
           finalResponse?.message
