@@ -191,13 +191,14 @@ function BlogPage() {
           id={blog?._id as string}
           likeCount={blog?.likeCount as number}
           banner={blog?.blogBanner}
+          blogAuthor={blog?.user}
           title={blog?.blogTitle}
           createdOn={moment(new Date(blog?.createdOn as string)).format(
             "MMM DD YYYY"
           )}
           description={blog?.blogDescription}
           tags={blog?.tags}
-          user={blog?.user}
+          user={userInfo}
           handleBookmark={handleBookmark}
           handleLike={handleLike}
         />
@@ -214,6 +215,7 @@ type BlogCardProps = {
   createdOn: String | undefined;
   description: String | undefined;
   tags: String | undefined;
+  blogAuthor: User;
   handleLike: (blogId: String) => void;
   handleBookmark: (blogId: String) => void;
   user?: {
@@ -275,14 +277,14 @@ function BlogCard(props: BlogCardProps) {
       </div>
       <div className="flex gap-4 w-full">
         <img
-          src={props.user?.pic as string}
+          src={props.blogAuthor?.pic as string}
           alt="Blog Author Image"
           className="w-12 h-12 object-cover border-2 border-white rounded-full"
           loading="lazy"
         />
         <div className="flex flex-col gap-1 w-full">
           <div className="font-semibold flex gap-3 items-center">
-            <span>{props.user?.name}</span>
+            <span>{props.blogAuthor?.name}</span>
             <div className="w-1 h-1 bg-gray-800 rounded-full"></div>
             <span className="text-gray-500 font-light text-xs">
               {moment(new Date(props?.createdOn as string)).format(
@@ -290,7 +292,7 @@ function BlogCard(props: BlogCardProps) {
               )}
             </span>
           </div>
-          <p className="text-gray-500 w-full">{props.user?.bio}</p>
+          <p className="text-gray-500 w-full">{props.blogAuthor?.bio}</p>
         </div>
       </div>
       <div className="flex w-full gap-8">
