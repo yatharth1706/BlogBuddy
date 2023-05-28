@@ -86,12 +86,14 @@ function ArticleCard(props: ArticleCardDetails) {
   };
 
   const handleLike = () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setLikeCount(String(parseInt(likeCount) - 1));
-    } else {
-      setIsLiked(true);
-      setLikeCount(String(parseInt(likeCount) + 1));
+    if (localStorage.getItem("jwt")) {
+      if (isLiked) {
+        setIsLiked(false);
+        setLikeCount(String(parseInt(likeCount) - 1));
+      } else {
+        setIsLiked(true);
+        setLikeCount(String(parseInt(likeCount) + 1));
+      }
     }
     if (props.handleLike) {
       props.handleLike(props.id);
@@ -99,10 +101,12 @@ function ArticleCard(props: ArticleCardDetails) {
   };
 
   const handleBookmark = () => {
-    if (isBookmarked) {
-      setIsBookmarked(false);
-    } else {
-      setIsBookmarked(true);
+    if (localStorage.getItem("jwt")) {
+      if (isBookmarked) {
+        setIsBookmarked(false);
+      } else {
+        setIsBookmarked(true);
+      }
     }
     if (props.handleBookmark) {
       props.handleBookmark(props.id);

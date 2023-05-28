@@ -240,21 +240,25 @@ function BlogCard(props: BlogCardProps) {
   }, [props?.user]);
 
   const handleLike = () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setLikeCount(String(parseInt(likeCount) - 1));
-    } else {
-      setIsLiked(true);
-      setLikeCount(String(parseInt(likeCount) + 1));
+    if (localStorage.getItem("jwt")) {
+      if (isLiked) {
+        setIsLiked(false);
+        setLikeCount(String(parseInt(likeCount) - 1));
+      } else {
+        setIsLiked(true);
+        setLikeCount(String(parseInt(likeCount) + 1));
+      }
     }
     props.handleLike(props.id as string);
   };
 
   const handleBookmark = () => {
-    if (isBookmarked) {
-      setIsBookmarked(false);
-    } else {
-      setIsBookmarked(true);
+    if (localStorage.getItem("jwt")) {
+      if (isBookmarked) {
+        setIsBookmarked(false);
+      } else {
+        setIsBookmarked(true);
+      }
     }
     props.handleBookmark(props.id as string);
   };

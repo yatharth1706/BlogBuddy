@@ -26,6 +26,7 @@
     "formik": "^2.2.9",
     "jsonwebtoken": "^9.0.0",
     "lucide-react": "^0.221.0",
+    "moment": "^2.29.4",
     "mongoose": "^7.2.1",
     "next": "13.4.3",
     "postcss": "8.4.23",
