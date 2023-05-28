@@ -30,10 +30,6 @@ Blogging website built using following
 - User can follow another account
 - User can publish the blog
 
-# <<<<<<< HEAD
-
-> > > > > > > origin/main
-
 ## Steps to setup the project locally
 
 ```
@@ -43,7 +39,6 @@ Blogging website built using following
 
 - Copy .env.example file to .env and replace required environment variables
 
-<<<<<<< HEAD
 For bucketId and projectId replace it with your Appwrite cloud bucket and project ids
 
 - Install all libraries
@@ -58,8 +53,6 @@ For bucketId and projectId replace it with your Appwrite cloud bucket and projec
   npm run dev
 ```
 
-=======
-
 - Install all libraries
 
 ```
@@ -71,5 +64,3 @@ For bucketId and projectId replace it with your Appwrite cloud bucket and projec
 ```
   npm run dev
 ```
-
-> > > > > > > origin/main
