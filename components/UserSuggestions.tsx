@@ -182,7 +182,7 @@ export default function UserSuggestions() {
         (sug, index) =>
           sug._id !== userId && (
             <UserSuggestionsCard
-              key={index.toString()}
+              key={(index + Math.random()).toString()}
               userId={userId as string}
               name={sug.name}
               bio={sug.bio}
