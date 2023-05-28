@@ -35,7 +35,7 @@ type User = {
   _id?: String;
 };
 
-function Page() {
+function BlogPage() {
   const [blog, setBlog] = useState<BlogData>();
   const [blogSettings, setBlogSettings] = useRecoilState(homePageSettings);
   const [userInfo, setUserInfo] = useState<User>({});
@@ -320,4 +320,4 @@ function BlogCard(props: BlogCardProps) {
   );
 }
 
-export default Page;
+export default BlogPage;

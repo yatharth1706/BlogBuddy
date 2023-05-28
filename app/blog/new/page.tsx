@@ -3,7 +3,7 @@ import { newBlog } from "@/atoms/blog";
 import React, { FormEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 
-function Page() {
+function NewBlogPage() {
   const [blog, setBlog] = useRecoilState(newBlog);
   const [filePreview, setFilePreview] = useState("");
 
@@ -67,4 +67,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default NewBlogPage;

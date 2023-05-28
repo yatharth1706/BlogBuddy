@@ -20,7 +20,7 @@ type UserInfo = {
   pic?: String;
 };
 
-export default function page() {
+export default function ProfilePage() {
   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "", email: "" });
   const [filePreview, setFilePreview] = useState("");
   const [isLoading, setIsLoading] = useState(false);

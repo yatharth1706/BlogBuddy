@@ -123,9 +123,9 @@ function Login() {
               {isLoading ? "Logging in ..." : "Log in"}
             </button>
             <p className="text-center font-light text-gray-700 mt-1">
-              Don't have an account.{" "}
+              Don't have an account.
               <Link href="/signup">
-                <span className="font-bold">Sign up</span>
+                <span className="font-bold ml-1">Sign up</span>
               </Link>{" "}
               here
             </p>
