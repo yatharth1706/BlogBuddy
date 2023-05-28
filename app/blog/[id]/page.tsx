@@ -39,7 +39,7 @@ function BlogPage() {
   const [blog, setBlog] = useState<BlogData>();
   const [blogSettings, setBlogSettings] = useRecoilState(homePageSettings);
   const [userInfo, setUserInfo] = useState<User>({});
-  const userId = window.localStorage.getItem("userId") ?? "";
+  const userId = localStorage.getItem("userId") ?? "";
 
   const path = usePathname();
   const id = path?.split("/").pop();

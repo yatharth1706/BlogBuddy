@@ -125,8 +125,8 @@ function Login() {
             <p className="text-center font-light text-gray-700 mt-1">
               Don't have an account.
               <Link href="/signup">
-                <span className="font-bold ml-1">Sign up</span>
-              </Link>{" "}
+                <span className="font-bold mx-1">Sign up</span>
+              </Link>
               here
             </p>
           </form>
