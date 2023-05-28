@@ -76,18 +76,20 @@ function UserSuggestionsCard(props: UserSuggestionDetails) {
   };
 
   return (
-    <div key={props?.key as string} className="flex gap-4">
-      <img
-        src={userPic as string}
-        alt="User Profile Pic"
-        className="w-12 h-12 rounded-full object-cover"
-        loading="lazy"
-      />
-      <div className="flex flex-col gap-1">
+    <div key={props?.key as string} className="flex w-full gap-4">
+      <div className="3/12">
+        <img
+          src={userPic as string}
+          alt="User Profile Pic"
+          className="w-12 h-12 rounded-full object-cover"
+          loading="lazy"
+        />
+      </div>
+      <div className="w-6/12 flex flex-col gap-1">
         <h2 className="font-medium">{props.name}</h2>
         <p className="font-light text-gray-600 text-xs">{props.bio}</p>
       </div>
-      <div className="ml-auto">
+      <div className="ml-auto w-3/12">
         <button
           className={
             "btn-secondary " + (isFollowed ? "btn-primary bg-opacity-70" : "")
