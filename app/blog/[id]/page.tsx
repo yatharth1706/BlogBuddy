@@ -39,7 +39,8 @@ function BlogPage() {
   const [blog, setBlog] = useState<BlogData>();
   const [blogSettings, setBlogSettings] = useRecoilState(homePageSettings);
   const [userInfo, setUserInfo] = useState<User>({});
-  const userId = localStorage.getItem("userId") ?? "";
+  const userId =
+    typeof window !== "undefined" ? window.localStorage.getItem("userId") : "";
 
   const path = usePathname();
   const id = path?.split("/").pop();
@@ -149,7 +150,10 @@ function BlogPage() {
 
   const handleLike = async (blogId: String) => {
     try {
-      const userId = localStorage.getItem("userId") ?? "";
+      const userId =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("userId")
+          : "";
       const response = await fetch("/api/blog/like", {
         method: "PUT",
         body: JSON.stringify({

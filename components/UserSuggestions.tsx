@@ -113,7 +113,8 @@ type User = {
 };
 
 export default function UserSuggestions() {
-  const userId = localStorage.getItem("userId") ?? "";
+  const userId =
+    typeof window !== "undefined" ? window.localStorage.getItem("userId") : "";
   const [userInfo, setUserInfo] = useState<User>({});
   const [userSuggestions, setUserSuggestions] = useState<
     UserSuggestionDetails[]
