@@ -37,7 +37,6 @@ export default function Articles() {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={10}>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => handleSettings("All Blogs")}>
               All Blogs
             </DropdownMenuItem>
