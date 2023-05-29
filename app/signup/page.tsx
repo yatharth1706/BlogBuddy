@@ -94,7 +94,7 @@ function Signup() {
               <span className="text-lg font-medium">Create a new account</span>
             </div>
             <p className="font-light text-sm mb-4">
-              Enter following details to create a new account in formvibe
+              Enter following details to create a new account in blogbuddy
             </p>
             <label htmlFor="name">Full Name</label>
             <input
